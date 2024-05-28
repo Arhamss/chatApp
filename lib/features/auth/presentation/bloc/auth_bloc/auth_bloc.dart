@@ -3,6 +3,7 @@ import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
 import 'package:equatable/equatable.dart';
 
 part 'auth_event.dart';
+
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -27,8 +28,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     });
   }
-  final SignInWithPhoneNumber signInWithPhoneNumber;
-  final VerifyCode verifyCode;
+
+  final SignInWithPhoneNumberUseCase signInWithPhoneNumber;
+  final VerifyCodeUseCases verifyCode;
   String _verificationId = '';
 
   void saveVerificationId(String verificationId) {

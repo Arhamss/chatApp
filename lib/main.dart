@@ -5,6 +5,7 @@ import 'package:chat_app/features/auth/data/repositories/user_repository_impl.da
 import 'package:chat_app/features/auth/domain/repositories/user_repository.dart';
 import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
+import 'package:chat_app/features/auth/presentation/pages/landing_page.dart';
 import 'package:chat_app/features/auth/presentation/pages/phone_number_page.dart';
 import 'package:chat_app/features/auth/presentation/pages/verification_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,6 +30,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.userRepository});
+
   final UserRepository userRepository;
 
   @override
@@ -37,8 +39,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc(
-            signInWithPhoneNumber: SignInWithPhoneNumber(userRepository),
-            verifyCode: VerifyCode(userRepository),
+            signInWithPhoneNumber: SignInWithPhoneNumberUseCase(userRepository),
+            verifyCode: VerifyCodeUseCases(userRepository),
           ),
         ),
       ],
@@ -46,7 +48,8 @@ class MyApp extends StatelessWidget {
         title: 'Chat App',
         initialRoute: '/',
         routes: {
-          '/': (context) => PhoneNumberPage(),
+          '/': (context) => const LandingPage(),
+          '/phone': (context) => PhoneNumberPage(),
           '/verify': (context) => VerificationPage(),
         },
       ),
