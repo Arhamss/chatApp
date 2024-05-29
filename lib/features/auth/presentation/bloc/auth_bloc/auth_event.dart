@@ -24,3 +24,37 @@ class CodeEntered extends AuthEvent {
   @override
   List<Object> get props => [code];
 }
+
+class CaptchaCompleted extends AuthEvent {}
+
+class AddPhoneNumberDigit extends AuthEvent {
+  const AddPhoneNumberDigit(this.digit);
+
+  final String digit;
+
+  @override
+  List<Object> get props => [digit];
+}
+
+class RemovePhoneNumberDigit extends AuthEvent {
+  const RemovePhoneNumberDigit();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AddDigit extends AuthEvent {
+  const AddDigit(this.digit);
+
+  final String digit;
+
+  @override
+  List<Object> get props => [digit];
+}
+
+class RemoveDigit extends AuthEvent {
+  const RemoveDigit();
+
+  @override
+  List<Object> get props => [];
+}

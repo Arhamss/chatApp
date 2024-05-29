@@ -1,6 +1,8 @@
 import 'package:chat_app/core/asset_names.dart';
+import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/main_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LandingPage extends StatelessWidget {
@@ -61,7 +63,7 @@ class LandingPage extends StatelessWidget {
               MainButton(
                 buttonText: 'Start Messaging',
                 onTapAction: () {
-                  Navigator.pushNamed(context, '/phone');
+                  context.goNamed(AppRoute.phone.name);
                 },
               ),
             ],

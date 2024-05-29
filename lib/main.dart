@@ -1,3 +1,4 @@
+import 'package:chat_app/core/router/app_router.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/features/auth/data/data_sources/auth_local_data_source.dart';
 import 'package:chat_app/features/auth/data/data_sources/auth_remote_data_source_impl.dart';
@@ -5,9 +6,7 @@ import 'package:chat_app/features/auth/data/repositories/user_repository_impl.da
 import 'package:chat_app/features/auth/domain/repositories/user_repository.dart';
 import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
-import 'package:chat_app/features/auth/presentation/pages/landing_page.dart';
-import 'package:chat_app/features/auth/presentation/pages/phone_number_page.dart';
-import 'package:chat_app/features/auth/presentation/pages/verification_page.dart';
+import 'package:chat_app/features/auth/presentation/bloc/profile_bloc/profile_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +28,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.userRepository});
+  MyApp({super.key, required this.userRepository});
 
   final UserRepository userRepository;
+  final AppRouter _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +43,15 @@ class MyApp extends StatelessWidget {
             verifyCode: VerifyCodeUseCases(userRepository),
           ),
         ),
+        BlocProvider(
+          create: (_) => ProfileBloc(),
+        ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
+        routerConfig: _appRouter.router,
+        // theme: ThemeData.from(
+        //     colorScheme: ColorScheme.fromSeed(seedColor: seedColor)),
         title: 'Chat App',
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const LandingPage(),
-          '/phone': (context) => PhoneNumberPage(),
-          '/verify': (context) => VerificationPage(),
-        },
       ),
     );
   }

@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
+
+enum NumpadInputType { phoneNumber, verificationCode }
 
 class CustomNumpad extends StatelessWidget {
-  const CustomNumpad({super.key, required this.controller});
+  const CustomNumpad({super.key, required this.inputType});
 
-  final TextEditingController controller;
+  final NumpadInputType inputType;
 
-  void _onKeyboardTap(String value) {
-    controller.text = controller.text + value;
+  void _onKeyboardTap(BuildContext context, String value) {
+    if (inputType == NumpadInputType.phoneNumber) {
+      context.read<AuthBloc>().add(AddPhoneNumberDigit(value));
+    } else if (inputType == NumpadInputType.verificationCode) {
+      context.read<AuthBloc>().add(AddDigit(value));
+    }
+  }
+
+  void _onBackspaceTap(BuildContext context) {
+    if (inputType == NumpadInputType.phoneNumber) {
+      context.read<AuthBloc>().add(const RemovePhoneNumberDigit());
+    } else if (inputType == NumpadInputType.verificationCode) {
+      context.read<AuthBloc>().add(const RemoveDigit());
+    }
   }
 
   @override
@@ -22,22 +38,22 @@ class CustomNumpad extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           if (index < 9) {
-            return _buildNumpadButton((index + 1).toString());
+            return _buildNumpadButton(context, (index + 1).toString());
           } else if (index == 9) {
             return Container();
           } else if (index == 10) {
-            return _buildNumpadButton('0');
+            return _buildNumpadButton(context, '0');
           } else {
-            return _buildBackspaceButton();
+            return _buildBackspaceButton(context);
           }
         },
       ),
     );
   }
 
-  Widget _buildNumpadButton(String value) {
+  Widget _buildNumpadButton(BuildContext context, String value) {
     return GestureDetector(
-      onTap: () => _onKeyboardTap(value),
+      onTap: () => _onKeyboardTap(context, value),
       child: Container(
         margin: const EdgeInsets.all(4.0),
         decoration: BoxDecoration(
@@ -57,14 +73,9 @@ class CustomNumpad extends StatelessWidget {
     );
   }
 
-  Widget _buildBackspaceButton() {
+  Widget _buildBackspaceButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (controller.text.isNotEmpty) {
-          controller.text =
-              controller.text.substring(0, controller.text.length - 1);
-        }
-      },
+      onTap: () => _onBackspaceTap(context),
       child: Container(
         margin: const EdgeInsets.all(4.0),
         decoration: BoxDecoration(

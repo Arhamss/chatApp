@@ -6,10 +6,12 @@ class MainButton extends StatelessWidget {
     super.key,
     required this.buttonText,
     required this.onTapAction,
+    this.isLoading = false,
   });
 
   final String buttonText;
   final VoidCallback onTapAction;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -19,21 +21,25 @@ class MainButton extends StatelessWidget {
         children: [
           Expanded(
             child: ElevatedButton(
-              onPressed: onTapAction,
+              onPressed: isLoading ? null : onTapAction,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF002DE3), // Background color
+                backgroundColor: const Color(0xFF002DE3),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(
-                buttonText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
+              child: isLoading
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : Text(
+                      buttonText,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
             ),
           ),
         ],
