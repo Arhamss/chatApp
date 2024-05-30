@@ -4,9 +4,9 @@ import 'package:chat_app/features/chat/domain/repositories/chat_repository.dart'
 import 'package:dartz/dartz.dart';
 
 class GetChatsUseCase {
-  final ChatRepository repository;
-
   GetChatsUseCase(this.repository);
+
+  final ChatRepository repository;
 
   Future<Either<Failure, List<ChatEntity>>> call() async {
     return await repository.getChats();

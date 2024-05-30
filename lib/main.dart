@@ -61,6 +61,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({
+    super.key,
     required this.signInWithPhoneNumberUseCase,
     required this.verifyCodeUseCases,
     required this.saveProfileUseCase,

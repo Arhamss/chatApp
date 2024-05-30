@@ -17,5 +17,5 @@ const Map<AppRoute, String> routeMap = {
   AppRoute.signin: 'signin',
   AppRoute.signin_verification: 'signin_verification',
   AppRoute.chatHome: '/chatHome',
-  AppRoute.chat: 'chat/:chatId',
+  AppRoute.chat: '/chat/:chatId',
 };

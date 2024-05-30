@@ -22,7 +22,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         name: 'Raki Devon',
         lastMessage: 'How is it going?',
         profilePictureUrl: 'https://example.com/image2.jpg',
-        lastMessageTime: DateTime.now().subtract(Duration(hours: 2)),
+        lastMessageTime: DateTime.now().subtract(const Duration(hours: 2)),
         unreadCount: 0,
       ),
       // Add more chat data here...

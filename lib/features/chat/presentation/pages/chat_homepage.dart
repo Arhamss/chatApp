@@ -1,122 +1,121 @@
+import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
+import 'package:chat_app/features/chat/presentation/widgets/build_user_stories.dart';
+import 'package:chat_app/features/chat/presentation/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatHomePage extends StatelessWidget {
-  const ChatHomePage({super.key});
+  ChatHomePage({super.key});
+
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chats'),
+        title: const Text(
+          'Chats',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Search action
-            },
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              addChat,
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              readAll,
+            ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildStoryItem(
-                  'Your Story',
-                  'https://example.com/your_story.jpg',
-                ),
-                _buildStoryItem(
-                  'Midala Hu',
-                  'https://example.com/midala_hu.jpg',
-                ),
-                _buildStoryItem(
-                  'Salsabila',
-                  'https://example.com/salsabila.jpg',
-                ),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16,
+        ),
+        child: Column(
+          children: [
+            StoriesListView(),
+            const Divider(
+              color: Color(0xFFEDEDED),
             ),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                hintText: 'Search',
-                filled: true,
-                fillColor: const Color(0xFFF7F7FC),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
-                ),
-              ),
+            CustomSearchBar(
+              controller: searchController,
+              hintText: 'Placeholder',
             ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: BlocBuilder<ChatBloc, ChatState>(
-              builder: (context, state) {
-                if (state is ChatLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is ChatLoaded) {
-                  return ListView.builder(
-                    itemCount: state.chats.length,
-                    itemBuilder: (context, index) {
-                      final chat = state.chats[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(chat.profilePictureUrl),
-                        ),
-                        title: Text(chat.name),
-                        subtitle: Text(chat.lastMessage),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              chat.lastMessageTime.toString(),
-                            ), // Format this as needed
-                            if (chat.unreadCount > 0)
-                              CircleAvatar(
-                                radius: 10,
+            Expanded(
+              child: BlocBuilder<ChatBloc, ChatState>(
+                builder: (context, state) {
+                  if (state is ChatLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ChatLoaded) {
+                    return ListView.builder(
+                      itemCount: state.chats.length,
+                      itemBuilder: (context, index) {
+                        final chat = state.chats[index];
+                        return ListTile(
+                          leading: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              image: const DecorationImage(
+                                image: AssetImage(arham),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          title: Text(chat.name),
+                          subtitle: Text(chat.lastMessage),
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                chat.lastMessageTime.day == DateTime.now().day
+                                    ? 'Today'
+                                    : '${chat.lastMessageTime.day}/${chat.lastMessageTime.month}',
+                              ),
+                              const CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Color(0xFFD2D5F9),
                                 child: Text(
-                                  chat.unreadCount.toString(),
-                                  style: const TextStyle(fontSize: 12),
+                                  '1',
+                                  style: TextStyle(
+                                    color: Color(0xFF001A83),
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                } else if (state is ChatError) {
-                  return Center(child: Text(state.message));
-                } else {
-                  return Container();
-                }
-              },
+                            ],
+                          ),
+                          onTap: () {
+                            // Navigate to chat page
+                          },
+                        );
+                      },
+                    );
+                  } else if (state is ChatError) {
+                    return Center(child: Text(state.message));
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStoryItem(String name, String imageUrl) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundImage: NetworkImage(imageUrl),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(name),
-      ],
+      ),
     );
   }
 }

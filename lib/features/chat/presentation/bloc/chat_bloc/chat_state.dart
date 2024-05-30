@@ -12,18 +12,18 @@ class ChatInitial extends ChatState {}
 class ChatLoading extends ChatState {}
 
 class ChatLoaded extends ChatState {
-  final List<ChatEntity> chats;
-
   const ChatLoaded(this.chats);
+
+  final List<ChatEntity> chats;
 
   @override
   List<Object> get props => [chats];
 }
 
 class ChatError extends ChatState {
-  final String message;
-
   const ChatError(this.message);
+
+  final String message;
 
   @override
   List<Object> get props => [message];
