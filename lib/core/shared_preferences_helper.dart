@@ -1,13 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  factory SharedPreferencesHelper() {
+  factory SharedPreferencesHelper(SharedPreferences sharedPreferences) {
     return _instance;
   }
 
   SharedPreferencesHelper._internal();
+
   static final SharedPreferencesHelper _instance =
       SharedPreferencesHelper._internal();
+
   late SharedPreferences _preferences;
 
   Future<void> init() async {
@@ -32,5 +34,15 @@ class SharedPreferencesHelper {
   // Get a boolean value
   bool? getBool(String key) {
     return _preferences.getBool(key);
+  }
+
+  // Set a list of strings
+  Future<void> setStringList(String key, List<String> value) async {
+    await _preferences.setStringList(key, value);
+  }
+
+  // Get a list of strings
+  List<String>? getStringList(String key) {
+    return _preferences.getStringList(key);
   }
 }

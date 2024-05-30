@@ -11,7 +11,14 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthCodeSent extends AuthState {}
+class AuthCodeSent extends AuthState {
+  const AuthCodeSent(this.verificationId);
+
+  final String verificationId;
+
+  @override
+  List<Object> get props => [verificationId];
+}
 
 class AuthAuthenticated extends AuthState {}
 

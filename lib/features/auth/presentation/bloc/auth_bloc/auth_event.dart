@@ -17,12 +17,13 @@ class PhoneNumberEntered extends AuthEvent {
 }
 
 class CodeEntered extends AuthEvent {
-  const CodeEntered(this.code);
+  const CodeEntered(this.verificationId, this.code);
 
+  final String verificationId;
   final String code;
 
   @override
-  List<Object> get props => [code];
+  List<Object> get props => [verificationId, code];
 }
 
 class CaptchaCompleted extends AuthEvent {}

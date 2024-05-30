@@ -1,0 +1,19 @@
+import 'package:flutter/material.dart';
+
+class ChatPage extends StatelessWidget {
+  const ChatPage({super.key, required this.chatId});
+
+  final String chatId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chat $chatId'),
+      ),
+      body: Center(
+        child: Text('Chat with ID: $chatId'),
+      ),
+    );
+  }
+}

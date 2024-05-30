@@ -8,10 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
-class VerificationPage extends StatelessWidget {
+class SignInVerificationPage extends StatelessWidget {
   final String verificationId;
 
-  const VerificationPage({super.key, required this.verificationId});
+  const SignInVerificationPage({super.key, required this.verificationId});
 
   void _showToast(BuildContext context, String message) {
     Fluttertoast.showToast(
@@ -66,7 +66,7 @@ class VerificationPage extends StatelessWidget {
                   },
                   listener: (context, state) {
                     if (state is AuthAuthenticated) {
-                      context.goNamed(AppRoute.profileSetup.name);
+                      context.goNamed(AppRoute.chatHome.name);
                     } else if (state is AuthError) {
                       _showToast(context, 'Error: ${state.message}');
                     }

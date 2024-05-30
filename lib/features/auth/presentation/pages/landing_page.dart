@@ -61,6 +61,15 @@ class LandingPage extends StatelessWidget {
                 ),
               ),
               MainButton(
+                buttonText: 'Sign In',
+                onTapAction: () {
+                  context.goNamed(AppRoute.signin.name);
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              MainButton(
                 buttonText: 'Start Messaging',
                 onTapAction: () {
                   context.goNamed(AppRoute.phone.name);

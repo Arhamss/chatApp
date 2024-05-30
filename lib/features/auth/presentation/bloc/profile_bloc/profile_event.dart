@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'profile_bloc.dart';
 
 abstract class ProfileEvent extends Equatable {
   const ProfileEvent();
@@ -7,12 +7,13 @@ abstract class ProfileEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SaveProfile extends ProfileEvent {
-  final String firstName;
-  final String lastName;
+class SaveProfileEvent extends ProfileEvent {
+  const SaveProfileEvent(this.user);
 
-  const SaveProfile(this.firstName, this.lastName);
+  final UserModel user;
 
   @override
-  List<Object?> get props => [firstName, lastName];
+  List<Object?> get props => [user];
 }
+
+class PickImageEvent extends ProfileEvent {}

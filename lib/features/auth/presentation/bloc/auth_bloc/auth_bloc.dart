@@ -18,13 +18,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<CaptchaCompleted>((event, emit) {
-      emit(AuthCodeSent());
+      emit(AuthCodeSent(_verificationId));
     });
 
     on<CodeEntered>((event, emit) async {
       emit(AuthLoading());
       final credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId,
+        verificationId: event.verificationId,
         smsCode: event.code,
       );
       try {
@@ -122,7 +122,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
         if (!completer.isCompleted) {
-          emit(AuthCodeSent());
+          emit(AuthCodeSent(verificationId));
           completer.complete();
         }
       },
