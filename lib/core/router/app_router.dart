@@ -7,7 +7,9 @@ import 'package:chat_app/features/auth/presentation/pages/sign_in_verfication_pa
 import 'package:chat_app/features/auth/presentation/pages/verification_page.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat_homepage.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat_page.dart';
+import 'package:chat_app/features/chat/presentation/pages/more_page.dart';
 import 'package:chat_app/features/chat/presentation/widgets/bottom_navigation.dart';
+import 'package:chat_app/features/contact/presentation/pages/contacts_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,6 +18,7 @@ class AppRouter {
       : router = GoRouter(
           initialLocation: routeMap[AppRoute.landing],
           debugLogDiagnostics: true,
+          navigatorKey: _rootNavigatorKey,
           routes: [
             GoRoute(
               path: routeMap[AppRoute.landing]!,
@@ -63,26 +66,62 @@ class AppRouter {
                 ),
               ],
             ),
-            ShellRoute(
-              navigatorKey: _rootNavigatorKey,
-              builder: (context, state, child) =>
-                  CustomBottomNavBar(child: child),
-              routes: [
-                GoRoute(
-                  path: routeMap[AppRoute.chatHome]!,
-                  name: AppRoute.chatHome.name,
-                  pageBuilder: (context, state) =>
-                      NoTransitionPage(child: ChatHomePage()),
+            StatefulShellRoute.indexedStack(
+              branches: <StatefulShellBranch>[
+                StatefulShellBranch(
+                  navigatorKey: _chatHomeRootNavigatorKey,
+                  initialLocation: routeMap[AppRoute.chatHome],
+                  routes: [
+                    GoRoute(
+                      path: routeMap[AppRoute.chatHome]!,
+                      name: AppRoute.chatHome.name,
+                      builder: (context, state) => ChatHomePage(),
+                      routes: [
+                        GoRoute(
+                          parentNavigatorKey: _rootNavigatorKey,
+                          path: routeMap[AppRoute.chat]!,
+                          name: AppRoute.chat.name,
+                          builder: (context, state) {
+                            final contactId = state.pathParameters['chatId']!;
+                            return ChatPage(chatId: contactId);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                GoRoute(
-                  path: routeMap[AppRoute.chat]!,
-                  name: AppRoute.chat.name,
-                  pageBuilder: (context, state) {
-                    final chatId = state.pathParameters['chatId']!;
-                    return NoTransitionPage(child: ChatPage(chatId: chatId));
-                  },
+                StatefulShellBranch(
+                  navigatorKey: _contactsRootNavigatorKey,
+                  initialLocation: routeMap[AppRoute.contacts],
+                  routes: [
+                    GoRoute(
+                      path: routeMap[AppRoute.contacts]!,
+                      name: AppRoute.contacts.name,
+                      builder: (context, state) => ContactsPage(),
+                    ),
+                  ],
+                ),
+                StatefulShellBranch(
+                  navigatorKey: _moreRootNavigatorKey,
+                  initialLocation: routeMap[AppRoute.more],
+                  routes: [
+                    GoRoute(
+                      path: routeMap[AppRoute.more]!,
+                      name: AppRoute.more.name,
+                      builder: (context, state) => MorePage(),
+                    ),
+                  ],
                 ),
               ],
+              builder: (
+                context,
+                GoRouterState state,
+                StatefulNavigationShell shell,
+              ) {
+                return CustomBottomNavBar(
+                  shell: shell,
+                );
+              },
             ),
           ],
         );
@@ -91,3 +130,9 @@ class AppRouter {
 }
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _chatHomeRootNavigatorKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _contactsRootNavigatorKey =
+    GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> _moreRootNavigatorKey =
+    GlobalKey<NavigatorState>();

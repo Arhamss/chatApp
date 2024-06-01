@@ -1,0 +1,118 @@
+import 'package:chat_app/core/asset_names.dart';
+import 'package:chat_app/core/router/app_routes.dart';
+import 'package:chat_app/core/widgets/search_bar.dart';
+import 'package:chat_app/features/contact/presentation/bloc/contact_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+
+class ContactsPage extends StatelessWidget {
+  ContactsPage({super.key});
+
+  final TextEditingController searchController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Contacts',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        actions: [
+          const SizedBox.shrink(),
+          IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              addContact,
+            ),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16,
+        ),
+        child: Column(
+          children: [
+            CustomSearchBar(
+              controller: searchController,
+              hintText: 'Placeholder',
+            ),
+            Expanded(
+              child: BlocConsumer<ContactBloc, ContactState>(
+                builder: (context, state) {
+                  if (state is ContactLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ContactLoaded) {
+                    return ListView.builder(
+                      itemCount: state.contacts.length,
+                      itemBuilder: (context, index) {
+                        final contact = state.contacts[index];
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      contact.photoUrl ?? '',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              title: Text(contact.name),
+                              subtitle: Text(contact.phone),
+                              onTap: () {
+                                context.read<ContactBloc>().add(
+                                      NavigateToChatScreenEvent(
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                        contactId: contact.id,
+                                        contacts: state.contacts,
+                                      ),
+                                    );
+                              },
+                            ),
+                            const Divider(
+                              color: Color(0xFFEDEDED),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (state is ContactError) {
+                    return Center(child: Text(state.message));
+                  } else {
+                    return Container();
+                  }
+                },
+                listener: (BuildContext context, ContactState state) {
+                  if (state is NavigatingToChatScreen) {
+                    context.goNamed(
+                      AppRoute.chat.name,
+                      pathParameters: {
+                        'chatId': state.conversationId,
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

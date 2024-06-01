@@ -1,10 +1,12 @@
 import 'package:chat_app/core/asset_names.dart';
+import 'package:chat_app/core/router/app_routes.dart';
+import 'package:chat_app/core/widgets/search_bar.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/build_user_stories.dart';
-import 'package:chat_app/features/chat/presentation/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class ChatHomePage extends StatelessWidget {
   ChatHomePage({super.key});
@@ -64,6 +66,7 @@ class ChatHomePage extends StatelessWidget {
                       itemCount: state.chats.length,
                       itemBuilder: (context, index) {
                         final chat = state.chats[index];
+                        final chatterId = chat.participants[1];
                         return ListTile(
                           leading: Container(
                             width: 48,
@@ -76,7 +79,7 @@ class ChatHomePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          title: Text(chat.name),
+                          title: Text(chat.lastMessageSender),
                           subtitle: Text(chat.lastMessage),
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +103,12 @@ class ChatHomePage extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            // Navigate to chat page
+                            context.goNamed(
+                              AppRoute.chat.name,
+                              pathParameters: {
+                                'chatId': chat.id,
+                              },
+                            );
                           },
                         );
                       },

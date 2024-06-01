@@ -14,7 +14,7 @@ class ChatLoading extends ChatState {}
 class ChatLoaded extends ChatState {
   const ChatLoaded(this.chats);
 
-  final List<ChatEntity> chats;
+  final List<ConversationEntity> chats;
 
   @override
   List<Object> get props => [chats];
