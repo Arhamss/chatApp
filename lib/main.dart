@@ -10,10 +10,13 @@ import 'package:chat_app/features/auth/presentation/bloc/profile_bloc/profile_bl
 import 'package:chat_app/features/chat/data/data_sources/chat_local_data_source.dart';
 import 'package:chat_app/features/chat/data/data_sources/chat_remote_data_source.dart';
 import 'package:chat_app/features/chat/data/repositories/chat_repository_impl.dart';
-import 'package:chat_app/features/chat/domain/use_cases/create_chat_use_case.dart';
 import 'package:chat_app/features/chat/domain/use_cases/get_chats_use_case.dart';
+import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
+import 'package:chat_app/features/chat/domain/use_cases/load_chat_message_use_case.dart';
+import 'package:chat_app/features/chat/domain/use_cases/send_message_use_case.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
+import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/contact/data/data_sources/contact_local_data_source.dart';
 import 'package:chat_app/features/contact/data/data_sources/contact_remote_data_source.dart';
 import 'package:chat_app/features/contact/data/repositories/contact_repository_impl.dart';
@@ -36,7 +39,10 @@ void main() async {
       SharedPreferencesHelper.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  final authRemoteDataSource = AuthRemoteDataSourceImpl(FirebaseAuth.instance);
+  final authRemoteDataSource = AuthRemoteDataSourceImpl(
+    FirebaseAuth.instance,
+    firebaseFirestore,
+  );
   final authLocalDataSource = AuthLocalDataSourceImpl(sharedPreferencesHelper);
 
   final userRepository = UserRepositoryImpl(
@@ -51,6 +57,8 @@ void main() async {
   final verifyCodeUseCases = VerifyCodeUseCases(userRepository);
   final saveProfileUseCase = SaveProfileUseCase(userRepository);
 
+  final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
+
   final chatLocalDataSource = ChatLocalDataSource(sharedPreferencesHelper);
   final chatRemoteDataSource = ChatRemoteDataSource(firebaseFirestore);
 
@@ -59,7 +67,7 @@ void main() async {
     localDataSource: chatLocalDataSource,
   );
   final getChatsUseCase = GetChatsUseCase(chatRepository);
-  final createChatsUseCase = CreateChatUseCase(chatRepository);
+  final sendMessageUseCase = SendMessageUseCase(chatRepository);
 
   final contactLocalDataSource =
       ContactLocalDataSource(sharedPreferencesHelper);
@@ -74,17 +82,21 @@ void main() async {
   final loadOrCreateChatConversationUseCase =
       LoadOrCreateChatConversationUseCase(chatRepository);
 
+  final loadChatMessageUseCase = LoadChatMessageUseCase(chatRepository);
+
   runApp(
     MyApp(
       signInWithPhoneNumberUseCase: signInWithPhoneNumberUseCase,
       verifyCodeUseCases: verifyCodeUseCases,
       saveProfileUseCase: saveProfileUseCase,
       getChatsUseCase: getChatsUseCase,
-      createChatUseCase: createChatsUseCase,
+      sendMessageUseCase: sendMessageUseCase,
       firebaseAuth: firebaseAuth,
       addContactsUseCase: addContactUseCase,
       loadContactsUseCase: loadContactsUseCase,
       loadOrCreateChatConversationUseCase: loadOrCreateChatConversationUseCase,
+      loadChatMessageUseCase: loadChatMessageUseCase,
+      getUserByIdUseCase: getUserByIdUseCase,
     ),
   );
 }
@@ -96,22 +108,26 @@ class MyApp extends StatelessWidget {
     required this.verifyCodeUseCases,
     required this.saveProfileUseCase,
     required this.getChatsUseCase,
-    required this.createChatUseCase,
+    required this.sendMessageUseCase,
     required this.firebaseAuth,
     required this.addContactsUseCase,
     required this.loadContactsUseCase,
     required this.loadOrCreateChatConversationUseCase,
+    required this.loadChatMessageUseCase,
+    required this.getUserByIdUseCase,
   });
 
   final SignInWithPhoneNumberUseCase signInWithPhoneNumberUseCase;
   final VerifyCodeUseCases verifyCodeUseCases;
   final SaveProfileUseCase saveProfileUseCase;
   final GetChatsUseCase getChatsUseCase;
-  final CreateChatUseCase createChatUseCase;
+  final SendMessageUseCase sendMessageUseCase;
   final FirebaseAuth firebaseAuth;
   final AddContactUseCase addContactsUseCase;
   final LoadContactsUseCase loadContactsUseCase;
   final LoadOrCreateChatConversationUseCase loadOrCreateChatConversationUseCase;
+  final LoadChatMessageUseCase loadChatMessageUseCase;
+  final GetUserByIdUseCase getUserByIdUseCase;
 
   final AppRouter _appRouter = AppRouter();
 
@@ -130,8 +146,15 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => ChatBloc(
+            sendMessageUseCase: sendMessageUseCase,
+            loadChatMessageUseCase: loadChatMessageUseCase,
+            getUserByIdUseCase: getUserByIdUseCase,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ChatHomeBloc(
             getChatsUseCase: getChatsUseCase,
-            createChatUsecase: createChatUseCase,
+            getUserByIdUseCase: getUserByIdUseCase,
           )..add(
               LoadChatsEvent(
                 firebaseAuth.currentUser!.uid,

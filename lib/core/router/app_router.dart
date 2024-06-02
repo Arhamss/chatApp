@@ -82,8 +82,14 @@ class AppRouter {
                           path: routeMap[AppRoute.chat]!,
                           name: AppRoute.chat.name,
                           builder: (context, state) {
-                            final contactId = state.pathParameters['chatId']!;
-                            return ChatPage(chatId: contactId);
+                            final contactId =
+                                state.uri.queryParameters['chatId']!;
+                            final receiverId =
+                                state.uri.queryParameters['receiverId']!;
+                            return ChatPage(
+                              chatId: contactId,
+                              receiverId: receiverId,
+                            );
                           },
                         ),
                       ],

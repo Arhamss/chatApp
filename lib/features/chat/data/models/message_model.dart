@@ -1,4 +1,5 @@
 import 'package:chat_app/features/chat/domain/entities/message_entity.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'message_model.freezed.dart';
@@ -15,6 +16,11 @@ class MessageModel extends MessageEntity with _$MessageModel {
     String? type,
   }) = _MessageModel;
 
-  factory MessageModel.fromJson(Map<String, Object?> json) =>
-      _$MessageModelFromJson(json);
+  // factory MessageModel.fromJson(Map<String, Object?> json) =>
+  //     _$MessageModelFromJson(json);
+
+  factory MessageModel.fromJson(Map<String, Object?> json) {
+    json['timestamp'] = (json['timestamp']! as Timestamp).toDate().toString();
+    return _$MessageModelFromJson(json);
+  }
 }

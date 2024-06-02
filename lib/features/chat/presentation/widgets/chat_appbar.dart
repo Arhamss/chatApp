@@ -1,15 +1,15 @@
 import 'package:chat_app/core/asset_names.dart';
+import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String userName;
-  final String userImageUrl;
+  final String receiverId;
   final VoidCallback onBack;
 
   ChatAppBar({
-    required this.userName,
-    required this.userImageUrl,
+    required this.receiverId,
     required this.onBack,
   });
 
@@ -22,14 +22,26 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         onPressed: onBack,
       ),
-      title: Row(
-        children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage(arham),
-          ),
-          const SizedBox(width: 10),
-          Text(userName),
-        ],
+      title: BlocBuilder<ChatBloc, ChatState>(
+        builder: (context, state) {
+          if (state is MessageLoaded) {
+            return Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    state.user.photoUrl,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  '${state.user.firstName} ${state.user.lastName}',
+                ),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        },
       ),
       actions: [
         IconButton(

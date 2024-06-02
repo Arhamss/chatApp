@@ -2,11 +2,14 @@ import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/search_bar.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
+import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/build_user_stories.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class ChatHomePage extends StatelessWidget {
   ChatHomePage({super.key});
@@ -57,7 +60,7 @@ class ChatHomePage extends StatelessWidget {
               hintText: 'Placeholder',
             ),
             Expanded(
-              child: BlocBuilder<ChatBloc, ChatState>(
+              child: BlocConsumer<ChatHomeBloc, ChatHomeState>(
                 builder: (context, state) {
                   if (state is ChatLoading) {
                     return const Center(child: CircularProgressIndicator());
@@ -73,20 +76,26 @@ class ChatHomePage extends StatelessWidget {
                             height: 48,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
-                              image: const DecorationImage(
-                                image: AssetImage(arham),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  state.users[index].photoUrl,
+                                ),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                          title: Text(chat.lastMessageSender),
+                          title: Text(
+                            '${state.users[index].firstName} ${state.users[index].lastName}',
+                          ),
                           subtitle: Text(chat.lastMessage),
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 chat.lastMessageTime.day == DateTime.now().day
-                                    ? 'Today'
+                                    ? DateFormat('HH:mm').format(
+                                        chat.lastMessageTime,
+                                      )
                                     : '${chat.lastMessageTime.day}/${chat.lastMessageTime.month}',
                               ),
                               const CircleAvatar(
@@ -103,12 +112,12 @@ class ChatHomePage extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            context.goNamed(
-                              AppRoute.chat.name,
-                              pathParameters: {
-                                'chatId': chat.id,
-                              },
-                            );
+                            context.read<ChatHomeBloc>().add(
+                                  NavigationToChatScreenEvent(
+                                    chat.id,
+                                    chat.participants[1],
+                                  ),
+                                );
                           },
                         );
                       },
@@ -117,6 +126,22 @@ class ChatHomePage extends StatelessWidget {
                     return Center(child: Text(state.message));
                   } else {
                     return Container();
+                  }
+                },
+                listener: (BuildContext context, ChatHomeState state) {
+                  if (state is NavigateToChatScreen) {
+                    context.read<ChatHomeBloc>().add(
+                          LoadChatsEvent(
+                            FirebaseAuth.instance.currentUser!.uid,
+                          ),
+                        );
+                    context.goNamed(
+                      AppRoute.chat.name,
+                      queryParameters: {
+                        'chatId': state.chatId,
+                        'receiverId': state.receiverId,
+                      },
+                    );
                   }
                 },
               ),

@@ -1,3 +1,4 @@
+import 'package:chat_app/features/auth/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthRemoteDataSource {
@@ -10,4 +11,6 @@ abstract class AuthRemoteDataSource {
   );
 
   Future<UserCredential> signInWithCredential(PhoneAuthCredential credential);
+
+  Future<UserModel?> getUserDetails(String userId);
 }

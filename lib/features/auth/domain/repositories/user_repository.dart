@@ -11,4 +11,8 @@ abstract class UserRepository {
   Future<Either<Failure, Unit>> saveUserProfile(UserModel user);
 
   Future<Either<Failure, String>> uploadProfilePhoto(String filePath);
+
+  Future<Either<Failure, UserModel>> getUserDetails(
+    String userId,
+  );
 }

@@ -23,4 +23,31 @@ class ChatLocalDataSource {
       return null;
     }
   }
+
+  Future<void> cacheMessages(
+    List<String> messages,
+    String conversationId,
+  ) async {
+    try {
+      await sharedPreferencesHelper.setStringList(
+        'cached_messages_$conversationId',
+        messages,
+      );
+    } catch (e, stackTrace) {
+      logger.severe('Failed to cache messages', e, stackTrace);
+    }
+  }
+
+  List<String>? getCachedMessages(
+    String conversationId,
+  ) {
+    try {
+      return sharedPreferencesHelper.getStringList(
+        'cached_messages_$conversationId',
+      );
+    } catch (e, stackTrace) {
+      logger.severe('Failed to get cached messages', e, stackTrace);
+      return null;
+    }
+  }
 }

@@ -1,8 +1,13 @@
 import 'package:bloc/bloc.dart';
-
+import 'package:chat_app/core/failures.dart';
+import 'package:chat_app/features/auth/domain/entities/user_entity.dart';
+import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/domain/entities/conversation_entity.dart';
-import 'package:chat_app/features/chat/domain/use_cases/create_chat_use_case.dart';
-import 'package:chat_app/features/chat/domain/use_cases/get_chats_use_case.dart';
+import 'package:chat_app/features/chat/domain/entities/message_entity.dart';
+import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
+import 'package:chat_app/features/chat/domain/use_cases/load_chat_message_use_case.dart';
+import 'package:chat_app/features/chat/domain/use_cases/send_message_use_case.dart';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
 part 'chat_event.dart';
@@ -10,42 +15,76 @@ part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
-  ChatBloc({required this.getChatsUseCase, required this.createChatUsecase})
-      : super(ChatInitial()) {
-    on<LoadChatsEvent>(_onLoadChats);
+  ChatBloc({
+    required this.sendMessageUseCase,
+    required this.loadChatMessageUseCase,
+    required this.getUserByIdUseCase,
+  }) : super(MessageLoading()) {
+    on<LoadChatMessageEvent>(_onLoadChatMessages);
+    on<SendMessageEvent>(_onSendMessage);
   }
 
-  final GetChatsUseCase getChatsUseCase;
-  final CreateChatUseCase createChatUsecase;
+  final SendMessageUseCase sendMessageUseCase;
+  final LoadChatMessageUseCase loadChatMessageUseCase;
+  final GetUserByIdUseCase getUserByIdUseCase;
+  final List<MessageEntity> _messages = [];
 
-  Future<void> _onLoadChats(
-    LoadChatsEvent event,
+  Future<void> _onSendMessage(
+    SendMessageEvent event,
     Emitter<ChatState> emit,
   ) async {
-    emit(ChatLoading());
-
-    final result = await getChatsUseCase.call(event.userId);
-
-    result.fold(
-      (failure) => emit(ChatError(failure.toString())),
-      (chats) => emit(ChatLoaded(chats)),
+    final msg = MessageModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      // Temporary ID
+      senderId: event.senderId,
+      text: event.text,
+      timestamp: DateTime.now(),
+      type: 'text',
     );
-  }
+    _messages.insert(0, msg);
+    // #TODO
+    // emit(MessageLoaded(_messages));
 
-  Future<void> _onCreateChat(
-    CreateChatEvent event,
-    Emitter<ChatState> emit,
-  ) async {
-    emit(ChatLoading());
-    final result = await createChatUsecase.call(
-      [event.userId, event.senderId],
-      event.message,
+    final result = await sendMessageUseCase.call(
       event.senderId,
+      event.text,
+      event.conversationId,
     );
 
     result.fold(
-      (failure) => emit(ChatError(failure.toString())),
-      (_) => null,
+      (failure) {
+        _messages.remove(msg);
+        emit(MessageError(failure.toString()));
+      },
+      (_) {},
+    );
+  }
+
+  Future<void> _onLoadChatMessages(
+    LoadChatMessageEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    final messagesStream = loadChatMessageUseCase.call(event.conversationId);
+    final userResult = await getUserByIdUseCase.call(
+      event.receiverId,
+    );
+    userResult.fold(
+      (failure) => MessageError(failure.toString()),
+      (user) async {
+        await emit.forEach<Either<Failure, List<MessageEntity>>>(
+          messagesStream,
+          onData: (result) => result.fold(
+            (failure) => MessageError(failure.toString()),
+            (data) {
+              return MessageLoaded(
+                data,
+                user,
+              );
+            },
+          ),
+          onError: (error, stackTrace) => MessageError(error.toString()),
+        );
+      },
     );
   }
 }

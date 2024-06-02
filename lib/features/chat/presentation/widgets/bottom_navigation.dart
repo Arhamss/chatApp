@@ -2,7 +2,7 @@ import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_event.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_state.dart';
-import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
+import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,7 +114,7 @@ class CustomBottomNavBar extends StatelessWidget {
         listener: (BuildContext context, BottomNavBarState state) {
           if (state is BottomNavBarUpdated && state.selectedIndex == 1) {
             final userId = FirebaseAuth.instance.currentUser!.uid;
-            context.read<ChatBloc>().add(LoadChatsEvent(userId));
+            context.read<ChatHomeBloc>().add(LoadChatsEvent(userId));
           }
         },
       ),

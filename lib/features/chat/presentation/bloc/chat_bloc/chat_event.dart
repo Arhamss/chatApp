@@ -1,34 +1,46 @@
 part of 'chat_bloc.dart';
 
 abstract class ChatEvent extends Equatable {
-  const ChatEvent(this.userId);
+  const ChatEvent();
 
-  final String userId;
+  @override
+  List<Object> get props => [];
+}
+
+class SendMessageEvent extends ChatEvent {
+  const SendMessageEvent(
+    this.conversationId,
+    this.senderId,
+    this.text,
+    this.messages,
+  );
+
+  final String conversationId;
+  final String senderId;
+  final String text;
+  final List<MessageEntity> messages;
 
   @override
   List<Object> get props => [
-        userId,
+        senderId,
+        text,
+        conversationId,
+        messages,
       ];
 }
 
-class LoadChatsEvent extends ChatEvent {
-  const LoadChatsEvent(super.userId);
-}
-
-class CreateChatEvent extends ChatEvent {
-  const CreateChatEvent(
-    super.userId,
-    this.senderId,
-    this.message,
+class LoadChatMessageEvent extends ChatEvent {
+  const LoadChatMessageEvent(
+    this.conversationId,
+    this.receiverId,
   );
 
-  final String senderId;
-  final String message;
+  final String conversationId;
+  final String receiverId;
 
   @override
   List<Object> get props => [
-        userId,
-        senderId,
-        message,
+        conversationId,
+        receiverId,
       ];
 }
