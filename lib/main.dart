@@ -1,3 +1,4 @@
+import 'package:chat_app/AppConfig.dart';
 import 'package:chat_app/core/router/app_router.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/features/auth/data/data_sources/auth_local_data_source.dart';
@@ -20,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+void runWithAppConfig(AppConfig appConfig) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -55,6 +56,7 @@ void main() async {
       verifyCodeUseCases: verifyCodeUseCases,
       saveProfileUseCase: saveProfileUseCase,
       getChatsUseCase: getChatsUseCase,
+      appConfig: appConfig,
     ),
   );
 }
@@ -65,8 +67,10 @@ class MyApp extends StatelessWidget {
     required this.verifyCodeUseCases,
     required this.saveProfileUseCase,
     required this.getChatsUseCase,
+    required this.appConfig,
   });
 
+  final AppConfig appConfig;
   final SignInWithPhoneNumberUseCase signInWithPhoneNumberUseCase;
   final VerifyCodeUseCases verifyCodeUseCases;
   final SaveProfileUseCase saveProfileUseCase;
@@ -94,7 +98,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         routerConfig: _appRouter.router,
-        title: 'Chat App',
+        title: appConfig.appName,
+        theme: appConfig.themeData,
       ),
     );
   }
