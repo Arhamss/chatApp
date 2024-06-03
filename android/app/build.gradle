@@ -44,6 +44,28 @@ android {
         versionName = flutterVersionName
     }
 
+    flavorDimensions "flavor_app"
+
+    productFlavors {
+        // name of the the flavor, in this case "dev"
+        dev {            
+            // name of the dimension
+            dimension "flavor_app"
+            // this will be added at the end of applicationId.
+            // like: com.example.chat_app.dev
+            applicationIdSuffix ".dev"              
+            versionNameSuffix ".dev"
+        }
+        // name of the the flavor, in this case "dev"
+        prod {
+            dimension "flavor_app"
+            // this will be added at the end of applicationId.
+            // like: com.example.chat_app.prod
+            applicationIdSuffix ".prod"
+            versionNameSuffix ".prod"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
