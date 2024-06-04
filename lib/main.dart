@@ -15,17 +15,13 @@ import 'package:chat_app/features/chat/domain/use_cases/get_chats_use_case.dart'
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void runWithAppConfig(AppConfig appConfig) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  final sharedPreferences = await SharedPreferences.getInstance();
+void runWithAppConfig(AppConfig appConfig, SharedPreferences sharedPreferences) {
   final sharedPreferencesHelper = SharedPreferencesHelper(sharedPreferences);
 
   final authRemoteDataSource = AuthRemoteDataSourceImpl(FirebaseAuth.instance);

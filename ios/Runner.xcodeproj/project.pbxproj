@@ -15,13 +15,9 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		F93F426B2C0DC3A0006BFBC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F93F42662C0DC3A0006BFBC6 /* GoogleService-Info.plist */; };
-		F93F426C2C0DC3A0006BFBC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F93F42682C0DC3A0006BFBC6 /* GoogleService-Info.plist */; };
-		F93F42722C0DC3C0006BFBC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F93F426D2C0DC3C0006BFBC6 /* GoogleService-Info.plist */; };
+		E1E320A572A11478150962DD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 725C814D7ABD8B520CACBDE9 /* GoogleService-Info.plist */; };
 		F93F42732C0DC3C0006BFBC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F93F426D2C0DC3C0006BFBC6 /* GoogleService-Info.plist */; };
-		F93F42742C0DC3C0006BFBC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F93F426F2C0DC3C0006BFBC6 /* GoogleService-Info.plist */; };
 		F93F42752C0DC3C0006BFBC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F93F426F2C0DC3C0006BFBC6 /* GoogleService-Info.plist */; };
-		F93F42772C0DC430006BFBC6 /* config in Resources */ = {isa = PBXBuildFile; fileRef = F93F42762C0DC42F006BFBC6 /* config */; };
 		F93F42782C0DC430006BFBC6 /* config in Resources */ = {isa = PBXBuildFile; fileRef = F93F42762C0DC42F006BFBC6 /* config */; };
 		FF549B6D46BF92D62526884F /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B77A8AE9CB270CFF8CD1A /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
@@ -65,6 +61,7 @@
 		61C77A10465C877540BCEA58 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		6F186775F4FBACBB0275ECFF /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
 		70A2D4051DF969D5D49ABE8A /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		725C814D7ABD8B520CACBDE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -170,13 +167,13 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				F93F42762C0DC42F006BFBC6 /* config */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				58F146D2D2E32E28DFD68D68 /* Pods */,
 				94DEAB365153C557D5656ED1 /* Frameworks */,
+				725C814D7ABD8B520CACBDE9 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -192,6 +189,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				F93F42762C0DC42F006BFBC6 /* config */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -284,7 +282,7 @@
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
-				F93F42792C0DC547006BFBC6 /* Copy GoogleService-info.plist to the correct location */,
+				F93F42792C0DC547006BFBC6 /* config */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
@@ -354,14 +352,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
-				F93F42742C0DC3C0006BFBC6 /* GoogleService-Info.plist in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
-				F93F426B2C0DC3A0006BFBC6 /* GoogleService-Info.plist in Resources */,
-				F93F42772C0DC430006BFBC6 /* config in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				F93F426C2C0DC3A0006BFBC6 /* GoogleService-Info.plist in Resources */,
-				F93F42722C0DC3C0006BFBC6 /* GoogleService-Info.plist in Resources */,
+				E1E320A572A11478150962DD /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,7 +454,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F93F42792C0DC547006BFBC6 /* Copy GoogleService-info.plist to the correct location */ = {
+		F93F42792C0DC547006BFBC6 /* config */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -469,14 +463,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Copy GoogleService-info.plist to the correct location";
+			name = config;
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "setopt KSH_ARRAYS BASH_REMATCH\n# Type a script or drag a script file from your workspace to insert its penvironment=\"default\"\n\n# Regex to extract the scheme name from the Build Configuration\n# We have named our Build Configurations as Debug-dev, Debug-prod etc.\n# Here, dev and prod are the scheme names. This kind of naming is required by Flutter for flavors to work.\n# We are using the $CONFIGURATION variable available in the XCode build environment to extract \n# the environment (or flavor)\n# For eg.\n# If CONFIGURATION=\"Debug-prod\", then environment will get set to \"prod\".\nif [[ $CONFIGURATION =~ -([^-]*)$ ]]; then\nenvironment=${BASH_REMATCH[1]}\nfi\n\necho $environment\n\n# Name and path of the resource we're copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\nGOOGLESERVICE_INFO_FILE=${PROJECT_DIR}/config/${environment}/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_FILE}\"\nif [ ! -f $GOOGLESERVICE_INFO_FILE ]\nthen\necho \"No GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\n\n# Get a reference to the destination location for the GoogleService-Info.plist\n# This is the default location where Firebase init code expects to find GoogleServices-Info.plist file\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\ncp \"${GOOGLESERVICE_INFO_FILE}\" \"${PLIST_DESTINATION}\"ath.\n\nunsetopt KSH_ARRAYSs\n";
+			shellScript = "if [ \"${CONFIGURATION}\" == \"Debug-prod\" ] || [ \"${CONFIGURATION}\" == \"Release-prod\" ] || [ \"${CONFIGURATION}\" == \"Profile-prod\" ]; then\ncp -r \"${PROJECT_DIR}/Runner/config/prod/GoogleService-Info.plist\" \"${PROJECT_DIR}/Runner/GoogleService-Info.plist\"\necho \"Development plist copied\"\nelif [ \"${CONFIGURATION}\" == \"Debug-dev\" ] || [ \"${CONFIGURATION}\" == \"Release-dev\" ] || [ \"${CONFIGURATION}\" == \"Profile-dev\" ]; then\ncp -r \"${PROJECT_DIR}/Runner/config/dev/GoogleService-Info.plist\" \"${PROJECT_DIR}/Runner/GoogleService-Info.plist\"\necho \"Production plist copied\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
