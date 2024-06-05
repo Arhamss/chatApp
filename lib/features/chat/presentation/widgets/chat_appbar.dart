@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String receiverId;
-  final VoidCallback onBack;
 
-  ChatAppBar({
+  const ChatAppBar({super.key, 
     required this.receiverId,
     required this.onBack,
   });
+  final String receiverId;
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                     state.user.photoUrl,
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   '${state.user.firstName} ${state.user.lastName}',
                 ),

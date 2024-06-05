@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MenuItem extends StatelessWidget {
-  final String iconAsset;
-  final String title;
-  final VoidCallback onPressed;
 
-  MenuItem({
+  const MenuItem({super.key, 
     required this.iconAsset,
     required this.title,
     required this.onPressed,
   });
+  final String iconAsset;
+  final String title;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

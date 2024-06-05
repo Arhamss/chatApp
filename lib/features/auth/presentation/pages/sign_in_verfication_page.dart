@@ -1,81 +1,58 @@
-import 'package:chat_app/core/router/app_routes.dart';
-import 'package:chat_app/core/widgets/main_button_widget.dart';
-import 'package:chat_app/core/widgets/numpad_widget.dart';
+import 'package:chat_app/core/shared_preferences_helper.dart';
+import 'package:chat_app/features/auth/data/data_sources/auth_local_data_source.dart';
+import 'package:chat_app/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:chat_app/features/auth/data/repositories/user_repository_impl.dart';
+import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
+import 'package:chat_app/features/auth/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
-import 'package:chat_app/features/auth/presentation/widges/code_display_widget.dart';
+import 'package:chat_app/features/auth/presentation/views/sign_in_verification_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get_it/get_it.dart';
 
 class SignInVerificationPage extends StatelessWidget {
   const SignInVerificationPage({super.key, required this.verificationId});
 
   final String verificationId;
 
-  void _showToast(BuildContext context, String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                String enteredCode = '';
-                if (state is CodeEntryState) {
-                  enteredCode = state.enteredCode;
-                }
-                return CodeDisplayWidget(enteredCode: enteredCode);
-              },
-            ),
-            Column(
-              children: [
-                const CustomNumpad(inputType: NumpadInputType.verificationCode),
-                const SizedBox(height: 20),
-                BlocConsumer<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    return MainButton(
-                      buttonText: 'Verify',
-                      onTapAction: () {
-                        final code = context.read<AuthBloc>().state
-                                is CodeEntryState
-                            ? (context.read<AuthBloc>().state as CodeEntryState)
-                                .enteredCode
-                            : '';
-                        context
-                            .read<AuthBloc>()
-                            .add(CodeEntered(verificationId, code));
-                      },
-                      isLoading: state is AuthLoading,
-                    );
-                  },
-                  listener: (context, state) {
-                    if (state is AuthAuthenticated) {
-                      context.goNamed(AppRoute.chatHome.name);
-                    } else if (state is AuthError) {
-                      _showToast(context, 'Error: ${state.message}');
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+    final sharedPreferencesHelper = GetIt.instance<SharedPreferencesHelper>();
+    final fireBaseAuth = GetIt.instance<FirebaseAuth>();
+    final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
+    final firebaseStorage = GetIt.instance<FirebaseStorage>();
+
+    //Auth Repository
+    final authRemoteDataSource = AuthRemoteDataSource(
+      fireBaseAuth,
+      firebaseFirestore,
+    );
+    final authLocalDataSource = AuthLocalDataSource(sharedPreferencesHelper);
+
+    final userRepository = UserRepositoryImpl(
+      authRemoteDataSource,
+      authLocalDataSource,
+      firebaseFirestore,
+      firebaseStorage,
+    );
+
+    //UseCases
+    final signInWithPhoneNumberUseCase =
+        SignInWithPhoneNumberUseCase(userRepository);
+
+    final verifyCodeUseCases = VerifyCodeUseCases(userRepository);
+    final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
+
+    return BlocProvider(
+      create: (context) => AuthBloc(
+        signInWithPhoneNumber: signInWithPhoneNumberUseCase,
+        verifyCode: verifyCodeUseCases,
+        getUserByIdUseCase: getUserByIdUseCase,
       ),
+      child: SignInVerificationView(verificationId: verificationId),
     );
   }
 }

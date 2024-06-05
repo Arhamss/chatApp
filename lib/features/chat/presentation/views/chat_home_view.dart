@@ -1,18 +1,18 @@
 import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/core/router/app_routes.dart';
+import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:chat_app/core/widgets/search_bar.dart';
-import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/build_user_stories.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class ChatHomePage extends StatelessWidget {
-  ChatHomePage({super.key});
+class ChatHomeView extends StatelessWidget {
+  ChatHomeView({super.key});
 
   final TextEditingController searchController = TextEditingController();
 
@@ -30,14 +30,14 @@ class ChatHomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: SvgPicture.asset(
-              addChat,
+            icon: const AssetImageWidget(
+              assetPath: addChat,
             ),
           ),
           IconButton(
             onPressed: () {},
-            icon: SvgPicture.asset(
-              readAll,
+            icon: const AssetImageWidget(
+              assetPath: readAll,
             ),
           ),
         ],
@@ -57,7 +57,7 @@ class ChatHomePage extends StatelessWidget {
             ),
             CustomSearchBar(
               controller: searchController,
-              hintText: 'Placeholder',
+              hintText: 'Search for chats',
             ),
             Expanded(
               child: BlocConsumer<ChatHomeBloc, ChatHomeState>(
@@ -69,7 +69,7 @@ class ChatHomePage extends StatelessWidget {
                       itemCount: state.chats.length,
                       itemBuilder: (context, index) {
                         final chat = state.chats[index];
-                        final chatterId = chat.participants[1];
+
                         return ListTile(
                           leading: Container(
                             width: 48,

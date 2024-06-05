@@ -1,5 +1,6 @@
 import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/core/router/app_routes.dart';
+import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:chat_app/core/widgets/main_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,15 +21,16 @@ class LandingPage extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
               ),
-              Center(
-                child: landingPageSVG,
+              const Center(
+                child: AssetImageWidget(
+                  assetPath: landingPage,
+                ),
               ),
               const Padding(
                 padding: EdgeInsets.fromLTRB(72, 32, 72, 16),
                 child: Text(
                   'Connect easily with your family and friends over countries',
                   style: TextStyle(
-                    color: Colors.black,
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),

@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatMessageBubble extends StatelessWidget {
-  final String message;
-  final bool isMe;
-  final String time;
-  final bool isRead;
-  final bool isImage;
-  final String? imageUrl;
-
-  ChatMessageBubble({
+  const ChatMessageBubble({
+    super.key,
     required this.message,
     required this.isMe,
     required this.time,
@@ -17,6 +10,13 @@ class ChatMessageBubble extends StatelessWidget {
     this.isImage = false,
     this.imageUrl,
   });
+
+  final String message;
+  final bool isMe;
+  final String time;
+  final bool isRead;
+  final bool isImage;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +30,8 @@ class ChatMessageBubble extends StatelessWidget {
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(15),
             topRight: const Radius.circular(15),
-            bottomLeft:
-                isMe ? const Radius.circular(15) : const Radius.circular(0),
-            bottomRight:
-                isMe ? const Radius.circular(0) : const Radius.circular(15),
+            bottomLeft: isMe ? const Radius.circular(15) : Radius.zero,
+            bottomRight: isMe ? Radius.zero : const Radius.circular(15),
           ),
         ),
         child: isImage

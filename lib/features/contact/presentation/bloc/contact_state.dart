@@ -28,10 +28,14 @@ class ContactError extends ContactState {
 }
 
 class NavigatingToChatScreen extends ContactState {
-  const NavigatingToChatScreen(this.conversationId);
+  const NavigatingToChatScreen(this.conversationId, this.receieverId);
 
   final String conversationId;
+  final String receieverId;
 
   @override
-  List<Object> get props => [conversationId];
+  List<Object> get props => [
+        conversationId,
+        receieverId,
+      ];
 }

@@ -1,4 +1,3 @@
-import 'package:chat_app/features/auth/data/models/user_model.dart';
 import 'package:chat_app/features/chat/data/models/conversation_model.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
