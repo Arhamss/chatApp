@@ -6,6 +6,8 @@ import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
 import 'package:chat_app/features/auth/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get_it/get_it.dart';
 
 part 'auth_event.dart';
 
@@ -33,11 +35,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetUserByIdUseCase getUserByIdUseCase;
   String verificationId = '';
 
+  String _sanitizeTopicName(String topic) {
+    // Replace +92 with 0
+    String sanitizedTopic = topic.replaceFirst('+92', '0');
+    // Replace any invalid characters with an underscore
+    return sanitizedTopic.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), '_');
+  }
+
   Future<void> _onPhoneNumberEntered(
     PhoneNumberEntered event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
+    // print("This is calleddd-----------------))))))))))))))>>>>>>>>>>>>>>>>>");
+    final messaging = GetIt.instance<FirebaseMessaging>();
+          final phoneNumber = _sanitizeTopicName(event.phoneNumber);
+          messaging.subscribeToTopic(phoneNumber);
+          // print("Subscribed to the phoneNumber ----------------------------------- : ${phoneNumber}");
     await _handlePhoneNumberVerification(event.phoneNumber, emit);
   }
 
@@ -136,6 +150,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         try {
+          
           await _firebaseAuth.signInWithCredential(credential);
           if (!completer.isCompleted) {
             emit(AuthAuthenticated());

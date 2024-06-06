@@ -11,8 +11,11 @@ import 'package:chat_app/features/chat/domain/use_cases/get_chats_use_case.dart'
 import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
+import 'package:chat_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +32,11 @@ class MyApp extends StatelessWidget {
 
   final AppRouter _appRouter = AppRouter();
 
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print("Handling a background message: ${message.messageId}");
+  }
+
   @override
   Widget build(BuildContext context) {
     final sharedPreferencesHelper = GetIt.instance<SharedPreferencesHelper>();
@@ -36,6 +44,8 @@ class MyApp extends StatelessWidget {
     final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
     final firebaseStorage = GetIt.instance<FirebaseStorage>();
 
+
+    
     //Auth Repository
     final authRemoteDataSource = AuthRemoteDataSource(
       firebaseAuth,
@@ -53,6 +63,20 @@ class MyApp extends StatelessWidget {
     final getChatsUseCase =
         GetChatsUseCase(GetIt.instance<ChatRepositoryImpl>());
     final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
+
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+
 
     return MultiBlocProvider(
       providers: [
