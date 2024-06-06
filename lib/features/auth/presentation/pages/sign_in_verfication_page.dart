@@ -9,16 +9,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 class SignInVerificationPage extends StatelessWidget {
-  final String verificationId;
-
   const SignInVerificationPage({super.key, required this.verificationId});
+
+  final String verificationId;
 
   void _showToast(BuildContext context, String message) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
       backgroundColor: Colors.red,
       textColor: Colors.white,
       fontSize: 16.0,

@@ -7,4 +7,40 @@ abstract class ChatEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadChatsEvent extends ChatEvent {}
+class SendMessageEvent extends ChatEvent {
+  const SendMessageEvent(
+    this.conversationId,
+    this.senderId,
+    this.text,
+    this.messages,
+  );
+
+  final String conversationId;
+  final String senderId;
+  final String text;
+  final List<MessageEntity> messages;
+
+  @override
+  List<Object> get props => [
+        senderId,
+        text,
+        conversationId,
+        messages,
+      ];
+}
+
+class LoadChatMessageEvent extends ChatEvent {
+  const LoadChatMessageEvent(
+    this.conversationId,
+    this.receiverId,
+  );
+
+  final String conversationId;
+  final String receiverId;
+
+  @override
+  List<Object> get props => [
+        conversationId,
+        receiverId,
+      ];
+}

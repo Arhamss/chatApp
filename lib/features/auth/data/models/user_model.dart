@@ -1,40 +1,25 @@
-import 'package:equatable/equatable.dart';
+import 'package:chat_app/features/auth/domain/entities/user_entity.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class UserModel extends Equatable {
-  const UserModel({
-    required this.id,
-    required this.phoneNumber,
-    this.firstName,
-    this.lastName,
-    this.photoUrl,
-  });
+part 'user_model.freezed.dart';
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] as String,
-      phoneNumber: json['phoneNumber'] as String,
-      firstName: json['firstName'] as String?,
-      lastName: json['lastName'] as String?,
-      photoUrl: json['photoUrl'] as String?,
-    );
-  }
+part 'user_model.g.dart';
 
-  final String id;
-  final String phoneNumber;
-  final String? firstName;
-  final String? lastName;
-  final String? photoUrl;
+@freezed
+class UserModel extends UserEntity with _$UserModel {
+  const factory UserModel({
+    required String id,
+    required String phoneNumber,
+    required String lastName,
+    required String photoUrl,
+    required String firstName,
+  }) = _UserModel;
 
-  @override
-  List<Object?> get props => [id, phoneNumber, firstName, lastName, photoUrl];
+  factory UserModel.fromJson(Map<String, Object?> json) =>
+      _$UserModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'phoneNumber': phoneNumber,
-      'firstName': firstName,
-      'lastName': lastName,
-      'photoUrl': photoUrl,
-    };
-  }
+// factory MessageModel.fromJson(Map<String, Object?> json) {
+//   json['timestamp'] = (json['timestamp']! as Timestamp).toDate().toString();
+//   return _$MessageModelFromJson(json);
+// }
 }

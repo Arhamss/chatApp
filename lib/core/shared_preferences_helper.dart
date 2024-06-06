@@ -1,48 +1,52 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  factory SharedPreferencesHelper(SharedPreferences sharedPreferences) {
-    return _instance;
-  }
-
-  SharedPreferencesHelper._internal();
+  SharedPreferencesHelper._privateConstructor();
 
   static final SharedPreferencesHelper _instance =
-      SharedPreferencesHelper._internal();
+      SharedPreferencesHelper._privateConstructor();
 
-  late SharedPreferences _preferences;
+  static SharedPreferencesHelper get instance => _instance;
 
-  Future<void> init() async {
-    _preferences = await SharedPreferences.getInstance();
+  SharedPreferences? _preferences;
+
+  static Future<void> init() async {
+    _instance._preferences = await SharedPreferences.getInstance();
   }
 
-  // Set a string value
   Future<void> setString(String key, String value) async {
-    await _preferences.setString(key, value);
+    if (_preferences != null) {
+      await _preferences!.setString(key, value);
+    } else {
+      throw Exception('SharedPreferences not initialized');
+    }
   }
 
-  // Get a string value
   String? getString(String key) {
-    return _preferences.getString(key);
+    return _preferences?.getString(key);
   }
 
-  // Set a boolean value
   Future<void> setBool(String key, bool value) async {
-    await _preferences.setBool(key, value);
+    if (_preferences != null) {
+      await _preferences!.setBool(key, value);
+    } else {
+      throw Exception('SharedPreferences not initialized');
+    }
   }
 
-  // Get a boolean value
   bool? getBool(String key) {
-    return _preferences.getBool(key);
+    return _preferences?.getBool(key);
   }
 
-  // Set a list of strings
   Future<void> setStringList(String key, List<String> value) async {
-    await _preferences.setStringList(key, value);
+    if (_preferences != null) {
+      await _preferences!.setStringList(key, value);
+    } else {
+      throw Exception('SharedPreferences not initialized');
+    }
   }
 
-  // Get a list of strings
   List<String>? getStringList(String key) {
-    return _preferences.getStringList(key);
+    return _preferences?.getStringList(key);
   }
 }

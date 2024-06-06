@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:chat_app/core/failures.dart';
@@ -9,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:logging/logging.dart';
 
 class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(
@@ -22,6 +24,7 @@ class UserRepositoryImpl implements UserRepository {
   final AuthLocalDataSource localDataSource;
   final FirebaseFirestore firestore;
   final FirebaseStorage storage;
+  final Logger logger = Logger('AuthUserRepository');
 
   @override
   Future<Either<Failure, Unit>> signInWithPhoneNumber(
@@ -66,6 +69,28 @@ class UserRepositoryImpl implements UserRepository {
           await remoteDataSource.signInWithCredential(credential);
       return Right(userCredential);
     } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserModel>> getUserDetails(
+    String userId,
+  ) async {
+    try {
+      final userDetails = await remoteDataSource.getUserDetails(userId);
+      if (userDetails != null) {
+        localDataSource.cacheUserDetails(userId, jsonEncode(userDetails));
+        return Right(userDetails);
+      } else {
+        return Left(ServerFailure());
+      }
+    } catch (e, stackTrace) {
+      logger.severe(
+        'Failed to fetch user details for user: $userId',
+        e,
+        stackTrace,
+      );
       return Left(ServerFailure());
     }
   }
