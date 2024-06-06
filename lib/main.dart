@@ -1,3 +1,4 @@
+import 'package:chat_app/AppConfig.dart';
 import 'package:chat_app/core/router/app_router.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/features/auth/data/data_sources/auth_local_data_source.dart';
@@ -26,23 +27,24 @@ import 'package:chat_app/features/contact/domain/use_cases/load_or_create_chat_c
 import 'package:chat_app/features/contact/presentation/bloc/contact_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await SharedPreferencesHelper.init();
-  final SharedPreferencesHelper sharedPreferencesHelper =
-      SharedPreferencesHelper.instance;
+
+void runWithAppConfig(AppConfig appConfig, SharedPreferencesHelper sharedPreferencesHelper) {
+
+
+
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final authRemoteDataSource = AuthRemoteDataSourceImpl(
     FirebaseAuth.instance,
     firebaseFirestore,
   );
+
   final authLocalDataSource = AuthLocalDataSourceImpl(sharedPreferencesHelper);
 
   final userRepository = UserRepositoryImpl(
@@ -90,6 +92,7 @@ void main() async {
       verifyCodeUseCases: verifyCodeUseCases,
       saveProfileUseCase: saveProfileUseCase,
       getChatsUseCase: getChatsUseCase,
+      appConfig: appConfig,
       sendMessageUseCase: sendMessageUseCase,
       firebaseAuth: firebaseAuth,
       addContactsUseCase: addContactUseCase,
@@ -108,6 +111,7 @@ class MyApp extends StatelessWidget {
     required this.verifyCodeUseCases,
     required this.saveProfileUseCase,
     required this.getChatsUseCase,
+    required this.appConfig,
     required this.sendMessageUseCase,
     required this.firebaseAuth,
     required this.addContactsUseCase,
@@ -117,6 +121,7 @@ class MyApp extends StatelessWidget {
     required this.getUserByIdUseCase,
   });
 
+  final AppConfig appConfig;
   final SignInWithPhoneNumberUseCase signInWithPhoneNumberUseCase;
   final VerifyCodeUseCases verifyCodeUseCases;
   final SaveProfileUseCase saveProfileUseCase;
@@ -179,7 +184,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         routerConfig: _appRouter.router,
-        title: 'Chat App',
+        title: appConfig.appName,
+        theme: appConfig.themeData,
       ),
     );
   }
