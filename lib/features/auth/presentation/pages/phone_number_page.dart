@@ -18,38 +18,52 @@ class PhoneNumberPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sharedPreferencesHelper = GetIt.instance<SharedPreferencesHelper>();
-    final fireBaseAuth = GetIt.instance<FirebaseAuth>();
-    final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
-    final firebaseStorage = GetIt.instance<FirebaseStorage>();
-
-    //Auth Repository
-    final authRemoteDataSource = AuthRemoteDataSource(
-      fireBaseAuth,
-      firebaseFirestore,
-    );
-    final authLocalDataSource = AuthLocalDataSource(sharedPreferencesHelper);
-
-    final userRepository = UserRepositoryImpl(
-      authRemoteDataSource,
-      authLocalDataSource,
-      firebaseFirestore,
-      firebaseStorage,
-    );
-
-    //UseCases
-    final signInWithPhoneNumberUseCase =
-        SignInWithPhoneNumberUseCase(userRepository);
-    final verifyCodeUseCases = VerifyCodeUseCases(userRepository);
-    final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
-
-    return BlocProvider(
-      create: (context) => AuthBloc(
-        signInWithPhoneNumber: signInWithPhoneNumberUseCase,
-        verifyCode: verifyCodeUseCases,
-        getUserByIdUseCase: getUserByIdUseCase,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthRemoteDataSource>(
+          create: (context) => AuthRemoteDataSource(
+            GetIt.instance<FirebaseAuth>(),
+            GetIt.instance<FirebaseFirestore>(),
+          ),
+        ),
+        RepositoryProvider<AuthLocalDataSource>(
+          create: (context) =>
+              AuthLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<UserRepositoryImpl>(
+          create: (context) => UserRepositoryImpl(
+            RepositoryProvider.of<AuthRemoteDataSource>(context),
+            RepositoryProvider.of<AuthLocalDataSource>(context),
+            GetIt.instance<FirebaseFirestore>(),
+            GetIt.instance<FirebaseStorage>(),
+          ),
+        ),
+        RepositoryProvider<SignInWithPhoneNumberUseCase>(
+          create: (context) => SignInWithPhoneNumberUseCase(
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<VerifyCodeUseCases>(
+          create: (context) => VerifyCodeUseCases(
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<GetUserByIdUseCase>(
+          create: (context) => GetUserByIdUseCase(
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => AuthBloc(
+          signInWithPhoneNumber:
+              RepositoryProvider.of<SignInWithPhoneNumberUseCase>(context),
+          verifyCode: RepositoryProvider.of<VerifyCodeUseCases>(context),
+          getUserByIdUseCase:
+              RepositoryProvider.of<GetUserByIdUseCase>(context),
+        ),
+        child: PhoneNumberView(),
       ),
-      child: PhoneNumberView(),
     );
   }
 }

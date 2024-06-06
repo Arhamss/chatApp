@@ -3,6 +3,8 @@ part of 'theme_bloc.dart';
 abstract class ThemeState extends Equatable {
   const ThemeState();
 
+  ThemeData get themeData;
+
   @override
   List<Object?> get props => [];
 }
@@ -10,6 +12,7 @@ abstract class ThemeState extends Equatable {
 class ThemeInitial extends ThemeState {
   const ThemeInitial({required this.themeData});
 
+  @override
   final ThemeData themeData;
 
   @override
@@ -19,6 +22,7 @@ class ThemeInitial extends ThemeState {
 class ThemeChanged extends ThemeState {
   const ThemeChanged({required this.themeData});
 
+  @override
   final ThemeData themeData;
 
   @override

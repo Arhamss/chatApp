@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
           } else if (state is ThemeChanged) {
             themeData = state.themeData;
           } else {
-            themeData = ThemeData.light(); // Fallback theme
+            themeData = ThemeData.light();
           }
           return MaterialApp.router(
             theme: themeData,

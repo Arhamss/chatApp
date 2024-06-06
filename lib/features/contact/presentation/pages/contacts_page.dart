@@ -21,49 +21,72 @@ class ContactsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sharedPreferencesHelper = GetIt.instance<SharedPreferencesHelper>();
-    final fireBaseAuth = GetIt.instance<FirebaseAuth>();
-    final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
-
-    //Contact Repository
-    final contactLocalDataSource =
-        ContactLocalDataSource(sharedPreferencesHelper);
-    final contactRemoteDataSource = ContactRemoteDataSource(firebaseFirestore);
-
-    final contactRepository = ContactRepositoryImpl(
-      remoteDataSource: contactRemoteDataSource,
-      localDataSource: contactLocalDataSource,
-    );
-
-    //Chat Repository
-    final chatLocalDataSource = ChatLocalDataSource(sharedPreferencesHelper);
-    final chatRemoteDataSource = ChatRemoteDataSource(firebaseFirestore);
-
-    final chatRepository = ChatRepositoryImpl(
-      remoteDataSource: chatRemoteDataSource,
-      localDataSource: chatLocalDataSource,
-    );
-
-    //UseCases
-    final addContactUseCase = AddContactUseCase(contactRepository);
-    final loadContactsUseCase = LoadContactsUseCase(contactRepository);
-    final loadOrCreateChatConversationUseCase =
-        LoadOrCreateChatConversationUseCase(
-      chatRepository,
-    );
-
-    return BlocProvider(
-      create: (context) => ContactBloc(
-        addContactUseCase: addContactUseCase,
-        loadContactsUseCase: loadContactsUseCase,
-        loadOrCreateChatConversationUseCase:
-            loadOrCreateChatConversationUseCase,
-      )..add(
-          LoadContactEvent(
-            fireBaseAuth.currentUser!.uid,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<ContactLocalDataSource>(
+          create: (context) =>
+              ContactLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<ContactRemoteDataSource>(
+          create: (context) =>
+              ContactRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+        ),
+        RepositoryProvider<ContactRepositoryImpl>(
+          create: (context) => ContactRepositoryImpl(
+            remoteDataSource:
+                RepositoryProvider.of<ContactRemoteDataSource>(context),
+            localDataSource:
+                RepositoryProvider.of<ContactLocalDataSource>(context),
           ),
         ),
-      child: ContactsView(),
+        RepositoryProvider<ChatLocalDataSource>(
+          create: (context) =>
+              ChatLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<ChatRemoteDataSource>(
+          create: (context) =>
+              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+        ),
+        RepositoryProvider<ChatRepositoryImpl>(
+          create: (context) => ChatRepositoryImpl(
+            remoteDataSource:
+                RepositoryProvider.of<ChatRemoteDataSource>(context),
+            localDataSource:
+                RepositoryProvider.of<ChatLocalDataSource>(context),
+          ),
+        ),
+        RepositoryProvider<AddContactUseCase>(
+          create: (context) => AddContactUseCase(
+            RepositoryProvider.of<ContactRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<LoadContactsUseCase>(
+          create: (context) => LoadContactsUseCase(
+            RepositoryProvider.of<ContactRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<LoadOrCreateChatConversationUseCase>(
+          create: (context) => LoadOrCreateChatConversationUseCase(
+            RepositoryProvider.of<ChatRepositoryImpl>(context),
+          ),
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => ContactBloc(
+          addContactUseCase: RepositoryProvider.of<AddContactUseCase>(context),
+          loadContactsUseCase:
+              RepositoryProvider.of<LoadContactsUseCase>(context),
+          loadOrCreateChatConversationUseCase:
+              RepositoryProvider.of<LoadOrCreateChatConversationUseCase>(
+            context,
+          ),
+        )..add(
+            LoadContactEvent(
+              GetIt.instance<FirebaseAuth>().currentUser!.uid,
+            ),
+          ),
+        child: ContactsView(),
+      ),
     );
   }
 }

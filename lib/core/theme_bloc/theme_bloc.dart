@@ -13,13 +13,10 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   }
 
   void _onToggleTheme(ToggleThemeEvent event, Emitter<ThemeState> emit) {
-    final currentState = state;
-    if (currentState is ThemeInitial || currentState is ThemeChanged) {
-      final newThemeData = AppThemes().lightTheme;
-      // final newThemeData = currentState.themeData.brightness == Brightness.dark
-      //     ? AppThemes().lightTheme
-      //     : AppThemes().darkTheme;
-      emit(ThemeChanged(themeData: newThemeData));
-    }
+    final currentTheme = state.themeData;
+    final newThemeData = currentTheme.brightness == Brightness.dark
+        ? AppThemes().lightTheme
+        : AppThemes().darkTheme;
+    emit(ThemeChanged(themeData: newThemeData));
   }
 }

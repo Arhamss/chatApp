@@ -1,4 +1,5 @@
 import 'package:chat_app/core/asset_names.dart';
+import 'package:chat_app/core/theme_bloc/theme_bloc.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/menu_item.dart';
 import 'package:chat_app/features/chat/presentation/widgets/profile_section.dart';
@@ -80,6 +81,22 @@ class MoreView extends StatelessWidget {
                   iconAsset: inviteFriends,
                   title: 'Invite Your Friends',
                   onPressed: () {},
+                ),
+                BlocBuilder<ThemeBloc, ThemeState>(
+                  builder: (context, themeState) {
+                    return SwitchListTile(
+                      title: const Text('Dark Mode'),
+                      value: themeState.themeData.brightness == Brightness.dark,
+                      onChanged: (bool value) {
+                        context.read<ThemeBloc>().add(ToggleThemeEvent());
+                      },
+                      secondary: Icon(
+                        themeState.themeData.brightness == Brightness.dark
+                            ? Icons.dark_mode
+                            : Icons.light_mode,
+                      ),
+                    );
+                  },
                 ),
               ],
             );
