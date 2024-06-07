@@ -22,10 +22,12 @@ class ChatPage extends StatelessWidget {
   const ChatPage({
     super.key,
     required this.chatId,
+    required this.phoneNumber,
     required this.receiverId,
   });
 
   final String chatId;
+  final String phoneNumber;
   final String receiverId;
 
   @override
@@ -83,6 +85,7 @@ class ChatPage extends StatelessWidget {
         ),
       child: ChatView(
         chatId: chatId,
+        phoneNumber: phoneNumber ,
         receiverId: receiverId,
       ),
     );

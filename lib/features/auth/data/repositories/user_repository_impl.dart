@@ -128,4 +128,72 @@ class UserRepositoryImpl implements UserRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure,void>> signOutUser() async {
+    try{
+      await remoteDataSource.signOutUser();
+      return const Right(null);
+    
+    }catch (e, stackTrace) {
+      logger.severe('Error uploading profile photo', e, stackTrace);
+      return Left(ServerFailure());
+    }
+  }
+  
+  @override
+  Future<Either<Failure, void>> subscribeTopic(String phoneNumber) async {
+    try{
+
+      await localDataSource.cacheSubscribedTopic(phoneNumber);
+
+      remoteDataSource.subscribeTopic(phoneNumber);
+      return const Right(null);
+    
+    }catch (e, stackTrace) {
+      logger.severe('Error uploading profile photo', e, stackTrace);
+      return Left(ServerFailure());
+    }
+  }
+  
+  @override
+  Future<Either<Failure, void>> unSubscribeTopic() async {
+    try{
+
+      final topic =  localDataSource.getSubscribedTopic();
+
+      remoteDataSource.unSubscribeTopic(topic!);
+
+      return const Right(null);
+    
+    }catch (e, stackTrace) {
+      logger.severe('Error uploading profile photo', e, stackTrace);
+      return Left(ServerFailure());
+    }
+  }
+  
+  // @override
+  //   Either<Failure, String>  getSubscribedTopic()   {
+  //   try {
+  //     final topic = localDataSource.getSubscribedTopic();
+  //     return Right(topic!);
+  //   } catch (e, stackTrace) {
+  //     logger.severe('Error uploading profile photo', e, stackTrace);
+  //     return Left(ServerFailure());
+  //   }
+  // }
+
+  // @override
+  // Future<Either<Failure,void>> cacheSubscribeTopic(String topic )async {
+  //   try{
+  //     await localDataSource.cacheSubscribedTopic(topic);
+  //     return const Right(null); 
+
+  //   }catch (e, stackTrace) {
+  //     logger.severe('Error uploading profile photo', e, stackTrace);
+  //     return Left(ServerFailure());
+  //   }
+  // } 
+
+  
 }

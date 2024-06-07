@@ -74,12 +74,26 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, void>> sendMessage(
     String senderId,
     String text,
+    String topicForNotification,
     String conversationId,
   ) async {
     try {
+      final userId = await remoteDataSource.getCurrentUserId(); 
+      final currentUserName = localDataSource.getUserDetails(userId);
+      print("this is current User ---------${currentUserName}");
+
+      final jsonObject = jsonDecode(currentUserName!);
+  
+      // Access values from the JSON object
+      String firstName = jsonObject['firstName'].toString();
+      String lastName = jsonObject['lastName'].toString();
+
+      print("this is firstname User ---------${firstName}");
       await remoteDataSource.sendMessage(
         senderId,
         text,
+        topicForNotification,
+        '$firstName $lastName',
         conversationId,
       );
       return const Right(null);

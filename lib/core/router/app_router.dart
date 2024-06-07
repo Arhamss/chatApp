@@ -86,8 +86,11 @@ class AppRouter {
                                 state.uri.queryParameters['chatId']!;
                             final receiverId =
                                 state.uri.queryParameters['receiverId']!;
+
+                            final phoneNumber = state.uri.queryParameters['phoneNumber']!;
                             return ChatPage(
                               chatId: contactId,
+                              phoneNumber: phoneNumber,
                               receiverId: receiverId,
                             );
                           },

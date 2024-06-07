@@ -18,7 +18,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInWithPhoneNumber,
     required this.verifyCode,
     required this.getUserByIdUseCase,
+    required this.notificationUseCases,
+    required this.authUseCases,
   }) : super(AuthInitial()) {
+    on<SignOutUserEvent>(_onSignOutUser);
     on<PhoneNumberEntered>(_onPhoneNumberEntered);
     on<CodeEntered>(_onCodeEntered);
     on<CaptchaCompleted>(_onCaptchaCompleted);
@@ -33,25 +36,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithPhoneNumberUseCase signInWithPhoneNumber;
   final VerifyCodeUseCases verifyCode;
   final GetUserByIdUseCase getUserByIdUseCase;
+  final NotificationUseCases notificationUseCases;
+  final AuthUseCases authUseCases;
   String verificationId = '';
 
-  String _sanitizeTopicName(String topic) {
-    // Replace +92 with 0
-    String sanitizedTopic = topic.replaceFirst('+92', '0');
-    // Replace any invalid characters with an underscore
-    return sanitizedTopic.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), '_');
-  }
+
+  Future<void> _onSignOutUser(
+    SignOutUserEvent event,
+    Emitter<AuthState> emit,
+    ) async {
+    try{
+      emit(AuthLoading());
+      await notificationUseCases.unSubscribeTopic();
+      await authUseCases.signOutUser();
+      emit(AuthSuccess());
+    }
+    catch (e) {
+      emit(const AuthError('Error signing out'));
+    }
+  } 
 
   Future<void> _onPhoneNumberEntered(
     PhoneNumberEntered event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
-    // print("This is calleddd-----------------))))))))))))))>>>>>>>>>>>>>>>>>");
+    emit(AuthLoading()); 
     final messaging = GetIt.instance<FirebaseMessaging>();
-          final phoneNumber = _sanitizeTopicName(event.phoneNumber);
-          messaging.subscribeToTopic(phoneNumber);
-          // print("Subscribed to the phoneNumber ----------------------------------- : ${phoneNumber}");
+          // final phoneNumber = _sanitizeTopicName(event.phoneNumber);
+
+    messaging.unsubscribeFromTopic("03068555581");
+    messaging.unsubscribeFromTopic("03101046849");
+    messaging.unsubscribeFromTopic("03014189946");
+    //       messaging.subscribeToTopic(phoneNumber);
+
+
+    await notificationUseCases.subscribeTopic(event.phoneNumber);
     await _handlePhoneNumberVerification(event.phoneNumber, emit);
   }
 

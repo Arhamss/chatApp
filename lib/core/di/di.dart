@@ -39,11 +39,11 @@ Future<void> setup() async {
 
 await messaging.getInitialMessage();
 
-await messaging.getToken().then(
-    (value)=>{
-      print("Token is $value"),
-    },
-  );
+// await messaging.getToken().then(
+//     (value)=>{
+//       print("Token is $value"),
+//     },
+//   );
 
   getIt.registerLazySingleton<FirebaseMessaging>(
     ()=>messaging,

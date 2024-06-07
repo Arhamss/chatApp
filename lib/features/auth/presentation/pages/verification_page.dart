@@ -45,11 +45,15 @@ class VerificationPage extends StatelessWidget {
 
     final verifyCodeUseCases = VerifyCodeUseCases(userRepository);
     final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
+    final notificationUseCases = NotificationUseCases(repository: userRepository);
+    final authUseCases = AuthUseCases(repository: userRepository);
     return BlocProvider(
       create: (context) => AuthBloc(
         signInWithPhoneNumber: signInWithPhoneNumberUseCase,
         verifyCode: verifyCodeUseCases,
         getUserByIdUseCase: getUserByIdUseCase,
+        notificationUseCases: notificationUseCases,
+        authUseCases: authUseCases,
       ),
       child: VerificationView(verificationId: verificationId),
     );

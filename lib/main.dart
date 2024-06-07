@@ -19,6 +19,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 void main() async {
@@ -31,11 +32,6 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final AppRouter _appRouter = AppRouter();
-
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print("Handling a background message: ${message.messageId}");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +60,6 @@ class MyApp extends StatelessWidget {
         GetChatsUseCase(GetIt.instance<ChatRepositoryImpl>());
     final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
 
-    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
@@ -73,7 +67,18 @@ class MyApp extends StatelessWidget {
       
 
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        print('Message also contained a notification: ${message.notification!.body}');
+
+        final messageRes = "${message.notification!.title}\n${message.notification!.body}";
+        
+        Fluttertoast.showToast(
+        msg: messageRes,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Color.fromARGB(255, 2, 249, 15),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       }
     });
 
