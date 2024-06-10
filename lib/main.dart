@@ -1,4 +1,5 @@
 import 'package:chat_app/core/di/di.dart';
+import 'package:chat_app/AppConfig.dart';
 import 'package:chat_app/core/router/app_router.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/core/theme.dart';
@@ -18,6 +19,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+void runWithAppConfig(AppConfig appConfig, SharedPreferencesHelper sharedPreferencesHelper) {
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -110,9 +116,11 @@ class AppView extends StatelessWidget {
           theme: appThemes.lightTheme,
           debugShowCheckedModeBanner: false,
           routerConfig: _appRouter.router,
-          title: 'Chat App',
+  title: appConfig.appName,
+  theme: appConfig.themeData,
         );
       },
+
     );
   }
 }
