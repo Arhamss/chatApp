@@ -1,8 +1,8 @@
 import 'package:chat_app/core/asset_names.dart';
-import 'package:chat_app/core/theme_bloc/theme_bloc.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/menu_item.dart';
-import 'package:chat_app/features/chat/presentation/widgets/profile_section.dart';
+import 'package:chat_app/features/more/presentation/bloc/theme_bloc/theme_bloc.dart';
+import 'package:chat_app/features/more/presentation/widgets/menu_item.dart';
+import 'package:chat_app/features/more/presentation/widgets/profile_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,18 +82,31 @@ class MoreView extends StatelessWidget {
                   title: 'Invite Your Friends',
                   onPressed: () {},
                 ),
+                // SwitchListTile(
+                //   title: const Text('asdasdsad'),
+                //   value: true,
+                //   onChanged: (bool value) {
+                //     print('hey bro');
+                //   },
+                //   secondary: Icon(
+                //     Icons.dark_mode,
+                //   ),
+                // ),
                 BlocBuilder<ThemeBloc, ThemeState>(
                   builder: (context, themeState) {
-                    return SwitchListTile(
-                      title: const Text('Dark Mode'),
-                      value: themeState.themeData.brightness == Brightness.dark,
-                      onChanged: (bool value) {
-                        context.read<ThemeBloc>().add(ToggleThemeEvent());
-                      },
-                      secondary: Icon(
-                        themeState.themeData.brightness == Brightness.dark
-                            ? Icons.dark_mode
-                            : Icons.light_mode,
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 0),
+                      child: SwitchListTile(
+                        title: const Text('Dark Mode'),
+                        value: themeState.themeMode == ThemeMode.dark,
+                        onChanged: (bool value) {
+                          context.read<ThemeBloc>().add(ToggleThemeEvent());
+                        },
+                        secondary: Icon(
+                          themeState.themeMode == ThemeMode.dark
+                              ? Icons.dark_mode
+                              : Icons.light_mode,
+                        ),
                       ),
                     );
                   },

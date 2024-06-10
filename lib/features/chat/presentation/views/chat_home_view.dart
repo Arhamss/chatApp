@@ -69,7 +69,6 @@ class ChatHomeView extends StatelessWidget {
                       itemCount: state.chats.length,
                       itemBuilder: (context, index) {
                         final chat = state.chats[index];
-
                         return ListTile(
                           leading: Container(
                             width: 48,

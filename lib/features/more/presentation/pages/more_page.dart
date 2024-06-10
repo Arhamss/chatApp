@@ -1,12 +1,12 @@
 import 'package:chat_app/core/shared_preferences_helper.dart';
-import 'package:chat_app/core/theme_bloc/theme_bloc.dart';
 import 'package:chat_app/features/auth/data/data_sources/auth_local_data_source.dart';
 import 'package:chat_app/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:chat_app/features/auth/data/repositories/user_repository_impl.dart';
 import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
 import 'package:chat_app/features/auth/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
-import 'package:chat_app/features/chat/presentation/views/more_view.dart';
+import 'package:chat_app/features/more/presentation/bloc/theme_bloc/theme_bloc.dart';
+import 'package:chat_app/features/more/presentation/views/more_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -65,9 +65,6 @@ class MorePage extends StatelessWidget {
               getUserByIdUseCase:
                   RepositoryProvider.of<GetUserByIdUseCase>(context),
             )..add(GetUserDetailsEvent(FirebaseAuth.instance.currentUser!.uid)),
-          ),
-          BlocProvider(
-            create: (context) => ThemeBloc(),
           ),
         ],
         child: const MoreView(),

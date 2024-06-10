@@ -7,16 +7,16 @@ import 'package:chat_app/features/auth/presentation/pages/sign_in_verfication_pa
 import 'package:chat_app/features/auth/presentation/pages/verification_page.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat_home_page.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat_page.dart';
-import 'package:chat_app/features/chat/presentation/pages/more_page.dart';
 import 'package:chat_app/features/chat/presentation/widgets/bottom_navigation.dart';
 import 'package:chat_app/features/contact/presentation/pages/contacts_page.dart';
+import 'package:chat_app/features/more/presentation/pages/more_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
   AppRouter()
       : router = GoRouter(
-          initialLocation: routeMap[AppRoute.landing],
+          initialLocation: routeMap[AppRoute.chatHome],
           debugLogDiagnostics: true,
           navigatorKey: _rootNavigatorKey,
           routes: [
