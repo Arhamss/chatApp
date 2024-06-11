@@ -80,7 +80,6 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       final userId = await remoteDataSource.getCurrentUserId(); 
       final currentUserName = localDataSource.getUserDetails(userId);
-      print("this is current User ---------${currentUserName}");
 
       final jsonObject = jsonDecode(currentUserName!);
   
@@ -88,7 +87,6 @@ class ChatRepositoryImpl implements ChatRepository {
       String firstName = jsonObject['firstName'].toString();
       String lastName = jsonObject['lastName'].toString();
 
-      print("this is firstname User ---------${firstName}");
       await remoteDataSource.sendMessage(
         senderId,
         text,

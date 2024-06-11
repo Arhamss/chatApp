@@ -57,10 +57,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _sanitizeTopicName(event.phoneNumber),
       event.conversationId,
     );
-
-    
-    
-
     result.fold(
       (failure) {
         _messages.remove(msg);
