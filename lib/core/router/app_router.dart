@@ -118,13 +118,6 @@ class AppRouter {
                       path: routeMap[AppRoute.more]!,
                       name: AppRoute.more.name,
                       builder: (context, state) => const MorePage(),
-                      routes:[
-                        GoRoute(
-                          path: routeMap[AppRoute.landing]!,
-                          name: AppRoute.landing.name,
-                          builder: (context, state) => const LandingPage(),
-                        ),
-                      ],
                     ),
                   ],
                 ),
