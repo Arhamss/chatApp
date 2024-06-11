@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:chat_app/core/failures.dart';
 import 'package:chat_app/features/auth/domain/entities/user_entity.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
-import 'package:chat_app/features/chat/domain/entities/conversation_entity.dart';
 import 'package:chat_app/features/chat/domain/entities/message_entity.dart';
 import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/chat/domain/use_cases/load_chat_message_use_case.dart';

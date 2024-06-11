@@ -50,3 +50,21 @@ class CodeEntryState extends AuthState {
   @override
   List<Object> get props => [enteredCode];
 }
+
+class FetchingUserDetailsState extends AuthState {
+  const FetchingUserDetailsState(this.userId);
+
+  final String userId;
+
+  @override
+  List<Object> get props => [userId];
+}
+
+class UserDetailsFetchedState extends AuthState {
+  const UserDetailsFetchedState(this.userDetails);
+
+  final UserModel userDetails;
+
+  @override
+  List<Object> get props => [userDetails];
+}

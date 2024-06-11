@@ -5,18 +5,18 @@ import 'package:chat_app/features/auth/presentation/pages/profile_setup_page.dar
 import 'package:chat_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:chat_app/features/auth/presentation/pages/sign_in_verfication_page.dart';
 import 'package:chat_app/features/auth/presentation/pages/verification_page.dart';
-import 'package:chat_app/features/chat/presentation/pages/chat_homepage.dart';
+import 'package:chat_app/features/chat/presentation/pages/chat_home_page.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat_page.dart';
-import 'package:chat_app/features/chat/presentation/pages/more_page.dart';
 import 'package:chat_app/features/chat/presentation/widgets/bottom_navigation.dart';
 import 'package:chat_app/features/contact/presentation/pages/contacts_page.dart';
+import 'package:chat_app/features/more/presentation/pages/more_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
   AppRouter()
       : router = GoRouter(
-          initialLocation: routeMap[AppRoute.landing],
+          initialLocation: routeMap[AppRoute.chatHome],
           debugLogDiagnostics: true,
           navigatorKey: _rootNavigatorKey,
           routes: [
@@ -28,7 +28,7 @@ class AppRouter {
                 GoRoute(
                   path: routeMap[AppRoute.phone]!,
                   name: AppRoute.phone.name,
-                  builder: (context, state) => PhoneNumberPage(),
+                  builder: (context, state) => const PhoneNumberPage(),
                   routes: [
                     GoRoute(
                       path: routeMap[AppRoute.verify]!,
@@ -41,7 +41,7 @@ class AppRouter {
                         GoRoute(
                           path: routeMap[AppRoute.profileSetup]!,
                           name: AppRoute.profileSetup.name,
-                          builder: (context, state) => ProfileSetupPage(),
+                          builder: (context, state) => const ProfileSetupPage(),
                         ),
                       ],
                     ),
@@ -50,11 +50,11 @@ class AppRouter {
                 GoRoute(
                   path: routeMap[AppRoute.signin]!,
                   name: AppRoute.signin.name,
-                  builder: (context, state) => SignInPage(),
+                  builder: (context, state) => const SignInPage(),
                   routes: [
                     GoRoute(
-                      path: routeMap[AppRoute.signin_verification]!,
-                      name: AppRoute.signin_verification.name,
+                      path: routeMap[AppRoute.signinVerification]!,
+                      name: AppRoute.signinVerification.name,
                       builder: (context, state) {
                         final verificationId = state.extra! as String;
                         return SignInVerificationPage(
@@ -75,7 +75,7 @@ class AppRouter {
                     GoRoute(
                       path: routeMap[AppRoute.chatHome]!,
                       name: AppRoute.chatHome.name,
-                      builder: (context, state) => ChatHomePage(),
+                      builder: (context, state) => const ChatHomePage(),
                       routes: [
                         GoRoute(
                           parentNavigatorKey: _rootNavigatorKey,
@@ -103,7 +103,7 @@ class AppRouter {
                     GoRoute(
                       path: routeMap[AppRoute.contacts]!,
                       name: AppRoute.contacts.name,
-                      builder: (context, state) => ContactsPage(),
+                      builder: (context, state) => const ContactsPage(),
                     ),
                   ],
                 ),
@@ -114,7 +114,7 @@ class AppRouter {
                     GoRoute(
                       path: routeMap[AppRoute.more]!,
                       name: AppRoute.more.name,
-                      builder: (context, state) => MorePage(),
+                      builder: (context, state) => const MorePage(),
                     ),
                   ],
                 ),

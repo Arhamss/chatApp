@@ -24,7 +24,7 @@ class UserRepositoryImpl implements UserRepository {
   final AuthLocalDataSource localDataSource;
   final FirebaseFirestore firestore;
   final FirebaseStorage storage;
-  final Logger logger = Logger('AuthUserRepository');
+  final Logger logger = Logger('UserRepositoryImpl');
 
   @override
   Future<Either<Failure, Unit>> signInWithPhoneNumber(
@@ -37,7 +37,7 @@ class UserRepositoryImpl implements UserRepository {
           await remoteDataSource.signInWithCredential(credential);
         },
         (FirebaseAuthException e) {
-          print(e);
+          logger.severe('FirebaseAuthException in signInWithPhoneNumber', e);
           throw ServerFailure();
         },
         (String verificationId, int? resendToken) async {
@@ -48,7 +48,8 @@ class UserRepositoryImpl implements UserRepository {
         },
       );
       return const Right(unit);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      logger.severe('Error in signInWithPhoneNumber', e, stackTrace);
       return Left(ServerFailure());
     }
   }
@@ -58,6 +59,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final verificationId = localDataSource.getVerificationId();
       if (verificationId == null) {
+        logger.severe('No verification ID found in verifyCode');
         return Left(ServerFailure());
       }
 
@@ -68,21 +70,21 @@ class UserRepositoryImpl implements UserRepository {
       final userCredential =
           await remoteDataSource.signInWithCredential(credential);
       return Right(userCredential);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      logger.severe('Error in verifyCode', e, stackTrace);
       return Left(ServerFailure());
     }
   }
 
   @override
-  Future<Either<Failure, UserModel>> getUserDetails(
-    String userId,
-  ) async {
+  Future<Either<Failure, UserModel>> getUserDetails(String userId) async {
     try {
       final userDetails = await remoteDataSource.getUserDetails(userId);
       if (userDetails != null) {
-        localDataSource.cacheUserDetails(userId, jsonEncode(userDetails));
+        await localDataSource.cacheUserDetails(userId, jsonEncode(userDetails));
         return Right(userDetails);
       } else {
+        logger.severe('No user details found for user: $userId');
         return Left(ServerFailure());
       }
     } catch (e, stackTrace) {
@@ -101,8 +103,12 @@ class UserRepositoryImpl implements UserRepository {
       final ref = firestore.collection('users').doc(user.id);
       await ref.set(user.toJson());
       return const Right(unit);
-    } catch (e) {
-      print(e);
+    } catch (e, stackTrace) {
+      logger.severe(
+        'Error saving user profile for user: ${user.id}',
+        e,
+        stackTrace,
+      );
       return Left(ServerFailure());
     }
   }
@@ -117,7 +123,8 @@ class UserRepositoryImpl implements UserRepository {
       final snapshot = await uploadTask.whenComplete(() {});
       final downloadUrl = await snapshot.ref.getDownloadURL();
       return Right(downloadUrl);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      logger.severe('Error uploading profile photo', e, stackTrace);
       return Left(ServerFailure());
     }
   }

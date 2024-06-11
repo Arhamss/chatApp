@@ -59,3 +59,12 @@ class RemoveDigit extends AuthEvent {
   @override
   List<Object> get props => [];
 }
+
+class GetUserDetailsEvent extends AuthEvent {
+  const GetUserDetailsEvent(this.userId);
+
+  final String userId;
+
+  @override
+  List<Object> get props => [userId];
+}
