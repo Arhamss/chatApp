@@ -61,13 +61,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading()); 
-    final messaging = GetIt.instance<FirebaseMessaging>();
-          // final phoneNumber = _sanitizeTopicName(event.phoneNumber);
+    // final messaging = GetIt.instance<FirebaseMessaging>();
+    //       // final phoneNumber = _sanitizeTopicName(event.phoneNumber);
 
-    messaging.unsubscribeFromTopic("03068555581");
-    messaging.unsubscribeFromTopic("03101046849");
-    messaging.unsubscribeFromTopic("03014189946");
-    //       messaging.subscribeToTopic(phoneNumber);
+    // messaging.unsubscribeFromTopic("03068555581");
+    // messaging.unsubscribeFromTopic("03101046849");
+    // messaging.unsubscribeFromTopic("03014189946");
+    // //       messaging.subscribeToTopic(phoneNumber);
 
 
     await notificationUseCases.subscribeTopic(event.phoneNumber);
