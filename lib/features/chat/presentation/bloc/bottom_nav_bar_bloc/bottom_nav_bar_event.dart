@@ -8,9 +8,9 @@ abstract class BottomNavBarEvent extends Equatable {
 }
 
 class UpdateTabIndex extends BottomNavBarEvent {
-  final int index;
-
   const UpdateTabIndex(this.index);
+
+  final int index;
 
   @override
   List<Object> get props => [index];

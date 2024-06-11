@@ -50,6 +50,7 @@ class ChatHomeBloc extends Bloc<ChatHomeEvent, ChatHomeState> {
                 (user) => users.add(user),
               );
             }
+
             emit(ChatLoaded(data, users));
           },
         );

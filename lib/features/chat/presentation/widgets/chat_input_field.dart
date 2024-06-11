@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatInputField extends StatelessWidget {
-  ChatInputField({required this.controller, required this.onSend});
+  const ChatInputField({super.key, required this.controller, required this.onSend});
 
   final TextEditingController controller;
   final VoidCallback onSend;
