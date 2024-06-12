@@ -53,6 +53,18 @@ class PhoneNumberPage extends StatelessWidget {
             RepositoryProvider.of<UserRepositoryImpl>(context),
           ),
         ),
+        RepositoryProvider<NotificationUseCases>(
+          create: (context) => NotificationUseCases(
+            repository: 
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<AuthUseCases>(
+          create: (context) => AuthUseCases(
+            repository: 
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
       ],
       child: BlocProvider(
         create: (context) => AuthBloc(
@@ -61,6 +73,8 @@ class PhoneNumberPage extends StatelessWidget {
           verifyCode: RepositoryProvider.of<VerifyCodeUseCases>(context),
           getUserByIdUseCase:
               RepositoryProvider.of<GetUserByIdUseCase>(context),
+              notificationUseCases: RepositoryProvider.of<NotificationUseCases>(context),
+              authUseCases: RepositoryProvider.of<AuthUseCases>(context),
         ),
         child: PhoneNumberView(),
       ),

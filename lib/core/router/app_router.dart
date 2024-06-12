@@ -16,7 +16,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   AppRouter()
       : router = GoRouter(
-          initialLocation: routeMap[AppRoute.chatHome],
+          initialLocation: routeMap[AppRoute.landing],
           debugLogDiagnostics: true,
           navigatorKey: _rootNavigatorKey,
           routes: [
@@ -86,8 +86,11 @@ class AppRouter {
                                 state.uri.queryParameters['chatId']!;
                             final receiverId =
                                 state.uri.queryParameters['receiverId']!;
+
+                            final phoneNumber = state.uri.queryParameters['phoneNumber']!;
                             return ChatPage(
                               chatId: contactId,
+                              phoneNumber: phoneNumber,
                               receiverId: receiverId,
                             );
                           },

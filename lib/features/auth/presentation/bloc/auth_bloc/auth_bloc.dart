@@ -6,6 +6,8 @@ import 'package:chat_app/features/auth/domain/use_cases/auth_use_cases.dart';
 import 'package:chat_app/features/auth/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get_it/get_it.dart';
 
 part 'auth_event.dart';
 
@@ -16,7 +18,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInWithPhoneNumber,
     required this.verifyCode,
     required this.getUserByIdUseCase,
+    required this.notificationUseCases,
+    required this.authUseCases,
   }) : super(AuthInitial()) {
+    on<SignOutUserEvent>(_onSignOutUser);
     on<PhoneNumberEntered>(_onPhoneNumberEntered);
     on<CodeEntered>(_onCodeEntered);
     on<CaptchaCompleted>(_onCaptchaCompleted);
@@ -31,13 +36,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithPhoneNumberUseCase signInWithPhoneNumber;
   final VerifyCodeUseCases verifyCode;
   final GetUserByIdUseCase getUserByIdUseCase;
+  final NotificationUseCases notificationUseCases;
+  final AuthUseCases authUseCases;
   String verificationId = '';
+
+
+  Future<void> _onSignOutUser(
+    SignOutUserEvent event,
+    Emitter<AuthState> emit,
+    ) async {
+    try{
+      emit(AuthLoading());
+      await notificationUseCases.unSubscribeTopic();
+      await authUseCases.signOutUser();
+      emit(AuthSuccess());
+    }
+    catch (e) {
+      emit(const AuthError('Error signing out'));
+    }
+  } 
 
   Future<void> _onPhoneNumberEntered(
     PhoneNumberEntered event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthLoading());
+    emit(AuthLoading()); 
+    // final messaging = GetIt.instance<FirebaseMessaging>();
+    //       // final phoneNumber = _sanitizeTopicName(event.phoneNumber);
+
+    // messaging.unsubscribeFromTopic("03068555581");
+    // messaging.unsubscribeFromTopic("03101046849");
+    // messaging.unsubscribeFromTopic("03014189946");
+    // //       messaging.subscribeToTopic(phoneNumber);
+
+
+    await notificationUseCases.subscribeTopic(event.phoneNumber);
     await _handlePhoneNumberVerification(event.phoneNumber, emit);
   }
 
@@ -136,6 +169,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         try {
+          
           await _firebaseAuth.signInWithCredential(credential);
           if (!completer.isCompleted) {
             emit(AuthAuthenticated());

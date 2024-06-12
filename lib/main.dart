@@ -12,11 +12,15 @@ import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/more/presentation/bloc/theme_bloc/theme_bloc.dart';
+import 'package:chat_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 void main() async {
@@ -38,6 +42,8 @@ class MyApp extends StatelessWidget {
     final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
     final firebaseStorage = GetIt.instance<FirebaseStorage>();
 
+
+    
     // Auth Repository
     final authRemoteDataSource = AuthRemoteDataSource(
       firebaseAuth,
@@ -55,6 +61,52 @@ class MyApp extends StatelessWidget {
     final getChatsUseCase =
         GetChatsUseCase(GetIt.instance<ChatRepositoryImpl>());
     final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification!.body}');
+
+        final messageRes = "${message.notification!.title}\n${message.notification!.body}";
+        
+        Fluttertoast.showToast(
+        msg: messageRes,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Color.fromARGB(255, 2, 249, 15),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      }
+    });
+
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification!.body}');
+
+        final messageRes = "${message.notification!.title}\n${message.notification!.body}";
+        
+        Fluttertoast.showToast(
+        msg: messageRes,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Color.fromARGB(255, 2, 249, 15),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      }
+    });
+
 
     return MultiRepositoryProvider(
       providers: [

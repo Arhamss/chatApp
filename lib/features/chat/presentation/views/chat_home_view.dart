@@ -2,8 +2,12 @@ import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:chat_app/core/widgets/search_bar.dart';
+import 'package:chat_app/features/auth/data/models/user_model.dart';
+import 'package:chat_app/features/auth/domain/entities/user_entity.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/build_user_stories.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +20,19 @@ class ChatHomeView extends StatelessWidget {
 
   final TextEditingController searchController = TextEditingController();
 
+  String findNumber(String PartiipantId, List<UserEntity> userEntityUserEntities){
+
+      for (var i = 0; i < userEntityUserEntities.length; i++) {
+        if(PartiipantId == userEntityUserEntities[i].id){
+          return userEntityUserEntities[i].phoneNumber;
+        }
+      }
+      return '';
+
+    }
+//REVIEW - - -  -  have to correct the name logic here for the push notification title
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,9 +128,13 @@ class ChatHomeView extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
+                            final phoneNumber = findNumber(chat.participants[1], state.users);
+
+
                             context.read<ChatHomeBloc>().add(
                                   NavigationToChatScreenEvent(
                                     chat.id,
+                                    phoneNumber,
                                     chat.participants[1],
                                   ),
                                 );
@@ -138,6 +159,7 @@ class ChatHomeView extends StatelessWidget {
                       AppRoute.chat.name,
                       queryParameters: {
                         'chatId': state.chatId,
+                        'phoneNumber': state.phoneNumber,
                         'receiverId': state.receiverId,
                       },
                     );

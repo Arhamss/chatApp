@@ -10,8 +10,9 @@ class SendMessageUseCase {
   Future<Either<Failure, void>> call(
     String senderId,
     String text,
+    String topicForNotification,
     String conversationId,
   ) async {
-    return await repository.sendMessage(senderId, text, conversationId);
+    return await repository.sendMessage(senderId,text,topicForNotification, conversationId);
   }
 }

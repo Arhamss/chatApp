@@ -6,10 +6,13 @@ import 'package:chat_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt getIt = GetIt.instance;
+
+
 
 Future<void> setup() async {
   await Firebase.initializeApp(
@@ -21,6 +24,31 @@ Future<void> setup() async {
   final firebaseFirestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
   final firebaseStorage = FirebaseStorage.instance;
+
+  final FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  await messaging.requestPermission(
+  alert: true,
+  announcement: false,
+  badge: true,
+  carPlay: false,
+  criticalAlert: false,
+  provisional: false,
+  sound: true,
+);
+
+await messaging.getInitialMessage();
+
+// await messaging.getToken().then(
+//     (value)=>{
+//       print("Token is $value"),
+//     },
+//   );
+
+  getIt.registerLazySingleton<FirebaseMessaging>(
+    ()=>messaging,
+  );
+
 
   // Register SharedPreferencesHelper
   getIt.registerLazySingleton<SharedPreferencesHelper>(
@@ -47,4 +75,6 @@ Future<void> setup() async {
       localDataSource: getIt<ChatLocalDataSource>(),
     ),
   );
+
+
 }

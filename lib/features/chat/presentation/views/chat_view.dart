@@ -12,9 +12,11 @@ class ChatView extends StatefulWidget {
     super.key,
     required this.chatId,
     required this.receiverId,
+    required this.phoneNumber,
   });
 
   final String chatId;
+  final String phoneNumber;
   final String receiverId;
 
   @override
@@ -85,6 +87,7 @@ class _ChatViewState extends State<ChatView> {
                           SendMessageEvent(
                             widget.chatId,
                             FirebaseAuth.instance.currentUser!.uid,
+                            widget.phoneNumber,
                             _controller.text,
                             state.messages,
                           ),

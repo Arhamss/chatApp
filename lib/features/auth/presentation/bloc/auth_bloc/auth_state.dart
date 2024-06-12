@@ -22,6 +22,8 @@ class AuthCodeSent extends AuthState {
 
 class AuthAuthenticated extends AuthState {}
 
+class AuthSuccess extends AuthState {}
+
 class AuthError extends AuthState {
   const AuthError(this.message);
 
@@ -68,3 +70,4 @@ class UserDetailsFetchedState extends AuthState {
   @override
   List<Object> get props => [userDetails];
 }
+
