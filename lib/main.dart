@@ -1,4 +1,5 @@
 import 'package:chat_app/core/di/di.dart';
+import 'package:chat_app/AppConfig.dart';
 import 'package:chat_app/core/router/app_router.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/core/theme.dart';
@@ -23,17 +24,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await setup();
+void runWithAppConfig(AppConfig appConfig, SharedPreferencesHelper sharedPreferencesHelper) {
+  
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  MyApp({required this.appConfig ,super.key});
 
   final AppRouter _appRouter = AppRouter();
   final AppThemes appThemes = AppThemes();
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -62,27 +63,6 @@ class MyApp extends StatelessWidget {
         GetChatsUseCase(GetIt.instance<ChatRepositoryImpl>());
     final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
-      
-
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification!.body}');
-
-        final messageRes = "${message.notification!.title}\n${message.notification!.body}";
-        
-        Fluttertoast.showToast(
-        msg: messageRes,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Color.fromARGB(255, 2, 249, 15),
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      }
-    });
 
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -133,7 +113,7 @@ class MyApp extends StatelessWidget {
             create: (context) => ThemeBloc(),
           ),
         ],
-        child: AppView(appThemes: appThemes, appRouter: _appRouter),
+        child: AppView(appThemes: appThemes, appRouter: _appRouter, appConfig: appConfig,),
       ),
     );
   }
@@ -144,10 +124,12 @@ class AppView extends StatelessWidget {
     super.key,
     required this.appThemes,
     required AppRouter appRouter,
+    required this.appConfig,
   }) : _appRouter = appRouter;
 
   final AppThemes appThemes;
   final AppRouter _appRouter;
+  final AppConfig appConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +144,7 @@ class AppView extends StatelessWidget {
           theme: appThemes.lightTheme,
           debugShowCheckedModeBanner: false,
           routerConfig: _appRouter.router,
-          title: 'Chat App',
+          title: appConfig.appName,
         );
       },
     );
