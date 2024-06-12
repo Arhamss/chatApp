@@ -67,6 +67,7 @@ class ChatHomeBloc extends Bloc<ChatHomeEvent, ChatHomeState> {
     emit(
       NavigateToChatScreen(
         event.chatId,
+        event.phoneNumber,
         event.receiverId,
       ),
     );

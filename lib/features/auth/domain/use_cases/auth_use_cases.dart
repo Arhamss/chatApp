@@ -22,3 +22,28 @@ class VerifyCodeUseCases {
     return repository.verifyCode(code);
   }
 }
+
+class AuthUseCases{
+  AuthUseCases({required this.repository});
+
+  final UserRepository repository;
+
+  Future<Either<Failure, void>> signOutUser () {
+    return repository.signOutUser(); 
+  }
+}
+
+class NotificationUseCases{
+ NotificationUseCases({required this.repository});
+
+  final UserRepository repository;
+  
+
+  Future<Either<Failure, void>> subscribeTopic(String phoneNumber){
+    return repository.subscribeTopic(phoneNumber);
+  }
+  Future<Either<Failure, void>> unSubscribeTopic(){
+    return repository.unSubscribeTopic();
+  }
+  
+}

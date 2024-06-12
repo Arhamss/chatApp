@@ -46,4 +46,27 @@ class AuthLocalDataSource {
       return null;
     }
   }
+
+  Future<void> cacheSubscribedTopic(String topic) async {
+    try{
+
+      await sharedPreferencesHelper.setString(
+        'currentTopic',
+        topic,
+      );
+      
+    }catch(e,stackTrace){
+      logger.severe('Failed to cache topic', e, stackTrace);
+    }
+  }
+
+
+  String? getSubscribedTopic(){
+    try {
+      return sharedPreferencesHelper.getString('currentTopic');
+    } catch (e, stackTrace) {
+      logger.severe('Failed to get cached user details', e, stackTrace);
+      return null;
+    }
+  }
 }

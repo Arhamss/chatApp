@@ -11,12 +11,14 @@ class SendMessageEvent extends ChatEvent {
   const SendMessageEvent(
     this.conversationId,
     this.senderId,
+    this.phoneNumber,
     this.text,
     this.messages,
   );
 
   final String conversationId;
   final String senderId;
+  final String phoneNumber;
   final String text;
   final List<MessageEntity> messages;
 
@@ -24,6 +26,7 @@ class SendMessageEvent extends ChatEvent {
   List<Object> get props => [
         senderId,
         text,
+        phoneNumber,
         conversationId,
         messages,
       ];
