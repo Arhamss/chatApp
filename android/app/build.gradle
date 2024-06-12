@@ -3,7 +3,11 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+<<<<<<< HEAD
     id "com.google.gms.google-services" 
+=======
+    id "com.google.gms.google-services"
+>>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
 }
 
 def localProperties = new Properties()
@@ -48,12 +52,12 @@ android {
 
     productFlavors {
         // name of the the flavor, in this case "dev"
-        dev{            
+        dev{
             // name of the dimension
             dimension "default"
             // this will be added at the end of applicationId.
             // like: com.example.chat_app.dev
-            applicationIdSuffix ".dev"              
+            applicationIdSuffix ".dev"
             versionNameSuffix ".dev"
         }
         // name of the the flavor, in this case "dev"

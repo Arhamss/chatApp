@@ -4,7 +4,7 @@ allprojects {
         google()
         mavenCentral()
     }
-  
+
 }
 
 rootProject.buildDir = "../build"
@@ -18,4 +18,7 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
