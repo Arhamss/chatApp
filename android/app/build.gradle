@@ -3,11 +3,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
-<<<<<<< HEAD
     id "com.google.gms.google-services" 
-=======
-    id "com.google.gms.google-services"
->>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
 }
 
 def localProperties = new Properties()

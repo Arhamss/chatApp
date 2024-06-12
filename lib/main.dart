@@ -15,7 +15,6 @@ import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_hom
 import 'package:chat_app/features/more/presentation/bloc/theme_bloc/theme_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-<<<<<<< HEAD
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,26 +30,6 @@ void runWithAppConfig(AppConfig appConfig) {
 
 class MyApp extends StatelessWidget {
   MyApp({required this.appConfig ,super.key});
-=======
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-
-void runWithAppConfig(AppConfig appConfig, SharedPreferencesHelper sharedPreferencesHelper) {
-
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await setup();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
->>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
 
   final AppRouter _appRouter = AppRouter();
   final AppThemes appThemes = AppThemes();
@@ -133,11 +112,7 @@ class MyApp extends StatelessWidget {
             create: (context) => ThemeBloc(),
           ),
         ],
-<<<<<<< HEAD
         child: AppView(appThemes: appThemes, appRouter: _appRouter, appConfig: appConfig,),
-=======
-        child: AppView(appThemes: appThemes, appRouter: _appRouter),
->>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
       ),
     );
   }
@@ -168,12 +143,7 @@ class AppView extends StatelessWidget {
           theme: appThemes.lightTheme,
           debugShowCheckedModeBanner: false,
           routerConfig: _appRouter.router,
-<<<<<<< HEAD
           title: appConfig.appName,
-=======
-  title: appConfig.appName,
-  theme: appConfig.themeData,
->>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
         );
       },
 
