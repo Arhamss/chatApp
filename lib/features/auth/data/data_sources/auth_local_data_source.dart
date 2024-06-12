@@ -1,40 +1,72 @@
 import 'package:chat_app/core/shared_preferences_helper.dart';
+import 'package:logging/logging.dart';
 
-abstract class AuthLocalDataSource {
-  Future<void> cacheVerificationId(String verificationId);
-
-  String? getVerificationId();
-
-  Future<void> cacheUserDetails(String userId, String userDetailsJson);
-
-  String? getUserDetails(String userId);
-}
-
-class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  AuthLocalDataSourceImpl(this.sharedPreferencesHelper);
+class AuthLocalDataSource {
+  AuthLocalDataSource(this.sharedPreferencesHelper);
 
   final SharedPreferencesHelper sharedPreferencesHelper;
+  final Logger logger = Logger('AuthLocalDataSourceImpl');
 
-  @override
   Future<void> cacheVerificationId(String verificationId) async {
-    await sharedPreferencesHelper.setString('verification_id', verificationId);
+    try {
+      await sharedPreferencesHelper.setString(
+        'verification_id',
+        verificationId,
+      );
+    } catch (e, stackTrace) {
+      logger.severe('Failed to cache verification ID', e, stackTrace);
+    }
   }
 
-  @override
   String? getVerificationId() {
-    return sharedPreferencesHelper.getString('verification_id');
+    try {
+      return sharedPreferencesHelper.getString('verification_id');
+    } catch (e, stackTrace) {
+      logger.severe('Failed to get cached verification ID', e, stackTrace);
+      return null;
+    }
   }
 
-  @override
   Future<void> cacheUserDetails(String userId, String userDetailsJson) async {
-    await sharedPreferencesHelper.setString(
-      'user_details_$userId',
-      userDetailsJson,
-    );
+    try {
+      await sharedPreferencesHelper.setString(
+        'user_details_$userId',
+        userDetailsJson,
+      );
+    } catch (e, stackTrace) {
+      logger.severe('Failed to cache user details', e, stackTrace);
+    }
   }
 
-  @override
   String? getUserDetails(String userId) {
-    return sharedPreferencesHelper.getString('user_details_$userId');
+    try {
+      return sharedPreferencesHelper.getString('user_details_$userId');
+    } catch (e, stackTrace) {
+      logger.severe('Failed to get cached user details', e, stackTrace);
+      return null;
+    }
+  }
+
+  Future<void> cacheSubscribedTopic(String topic) async {
+    try{
+
+      await sharedPreferencesHelper.setString(
+        'currentTopic',
+        topic,
+      );
+      
+    }catch(e,stackTrace){
+      logger.severe('Failed to cache topic', e, stackTrace);
+    }
+  }
+
+
+  String? getSubscribedTopic(){
+    try {
+      return sharedPreferencesHelper.getString('currentTopic');
+    } catch (e, stackTrace) {
+      logger.severe('Failed to get cached user details', e, stackTrace);
+      return null;
+    }
   }
 }

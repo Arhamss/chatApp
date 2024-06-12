@@ -65,13 +65,26 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
     NavigateToChatScreenEvent event,
     Emitter<ContactState> emit,
   ) async {
+    String contactUserId = '';
+    for (int i = 0; i < event.contacts.length; i++) {
+      if (event.contactId == event.contacts[i].id) {
+        contactUserId = event.contacts[i].contactUserId;
+      }
+    }
+
     final result = await loadOrCreateChatConversationUseCase.call(
       event.userId,
-      event.contactId,
+      contactUserId,
     );
+
     result.fold(
       (failure) => emit(ContactError(failure.toString())),
-      (conversationId) => emit(NavigatingToChatScreen(conversationId)),
+      (conversationId) => emit(
+        NavigatingToChatScreen(
+          conversationId,
+          contactUserId,
+        ),
+      ),
     );
 
     emit(ContactLoaded(event.contacts));

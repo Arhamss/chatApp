@@ -1,16 +1,18 @@
+import 'package:chat_app/core/asset_names.dart';
+import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileSection extends StatelessWidget {
-  final String avatarAsset;
-  final String name;
-  final String phoneNumber;
-
-  ProfileSection({
+  const ProfileSection({
+    super.key,
     required this.avatarAsset,
     required this.name,
     required this.phoneNumber,
   });
+
+  final String avatarAsset;
+  final String name;
+  final String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +20,17 @@ class ProfileSection extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 25,
-            backgroundColor: Colors.grey[200],
-            child: SvgPicture.asset(
-              avatarAsset,
-              width: 24,
-              height: 24,
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              image: DecorationImage(
+                image: NetworkImage(
+                  avatarAsset,
+                ),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           const SizedBox(width: 16.0),
@@ -53,7 +59,9 @@ class ProfileSection extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 32.0),
-          SvgPicture.asset('assets/right_arrow.svg'),
+          const AssetImageWidget(
+            assetPath: rightArrow,
+          ),
         ],
       ),
     );

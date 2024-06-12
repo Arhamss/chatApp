@@ -50,6 +50,7 @@ class ChatHomeBloc extends Bloc<ChatHomeEvent, ChatHomeState> {
                 (user) => users.add(user),
               );
             }
+
             emit(ChatLoaded(data, users));
           },
         );
@@ -66,6 +67,7 @@ class ChatHomeBloc extends Bloc<ChatHomeEvent, ChatHomeState> {
     emit(
       NavigateToChatScreen(
         event.chatId,
+        event.phoneNumber,
         event.receiverId,
       ),
     );

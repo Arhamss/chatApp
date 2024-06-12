@@ -36,15 +36,18 @@ class ChatError extends ChatHomeState {
 class NavigateToChatScreen extends ChatHomeState {
   const NavigateToChatScreen(
     this.chatId,
+    this.phoneNumber,
     this.receiverId,
   );
 
   final String chatId;
+  final String phoneNumber;
   final String receiverId;
 
   @override
   List<Object> get props => [
         chatId,
+        phoneNumber,
         receiverId,
       ];
 }

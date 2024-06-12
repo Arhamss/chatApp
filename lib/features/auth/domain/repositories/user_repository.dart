@@ -15,4 +15,13 @@ abstract class UserRepository {
   Future<Either<Failure, UserModel>> getUserDetails(
     String userId,
   );
+
+  Future<Either<Failure, void>> subscribeTopic(String phoneNumber);
+  Future<Either<Failure, void>> unSubscribeTopic();
+
+  // Future<Either<Failure,void>> cacheSubscribeTopic(String topic );
+
+  Future<Either<Failure,void>> signOutUser();
+
+
 }

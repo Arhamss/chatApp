@@ -31,7 +31,7 @@ class ChatRepositoryImpl implements ChatRepository {
           remoteChats.map((chat) => jsonEncode(chat.toJson())).toList(),
         );
         return Right<Failure, List<ConversationEntity>>(remoteChats);
-      }).handleError((error) {
+      }).handleError((Object error) {
         logger.severe('Failed to get chats for user $userId', error);
         final cachedChats = localDataSource.getCachedChats();
         if (cachedChats != null) {
@@ -74,12 +74,24 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, void>> sendMessage(
     String senderId,
     String text,
+    String topicForNotification,
     String conversationId,
   ) async {
     try {
+      final userId = await remoteDataSource.getCurrentUserId(); 
+      final currentUserName = localDataSource.getUserDetails(userId);
+
+      final jsonObject = jsonDecode(currentUserName!);
+  
+      // Access values from the JSON object
+      String firstName = jsonObject['firstName'].toString();
+      String lastName = jsonObject['lastName'].toString();
+
       await remoteDataSource.sendMessage(
         senderId,
         text,
+        topicForNotification,
+        '$firstName $lastName',
         conversationId,
       );
       return const Right(null);
@@ -107,7 +119,7 @@ class ChatRepositoryImpl implements ChatRepository {
           conversationId,
         );
         return Right<Failure, List<MessageEntity>>(remoteMessages);
-      }).handleError((error) {
+      }).handleError((Object error) {
         logger.severe(
           'Failed to get messages for conversation: $conversationId',
           error,
