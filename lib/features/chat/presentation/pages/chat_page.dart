@@ -5,7 +5,6 @@ import 'package:chat_app/features/auth/data/repositories/user_repository_impl.da
 import 'package:chat_app/features/chat/data/data_sources/chat_local_data_source.dart';
 import 'package:chat_app/features/chat/data/data_sources/chat_remote_data_source.dart';
 import 'package:chat_app/features/chat/data/repositories/chat_repository_impl.dart';
-
 import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/chat/domain/use_cases/load_chat_message_use_case.dart';
 import 'package:chat_app/features/chat/domain/use_cases/send_message_use_case.dart';
@@ -32,61 +31,77 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sharedPreferencesHelper = GetIt.instance<SharedPreferencesHelper>();
-    final fireBaseAuth = GetIt.instance<FirebaseAuth>();
-    final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
-    final firebaseStorage = GetIt.instance<FirebaseStorage>();
-
-    //Auth Repository
-    final authRemoteDataSource = AuthRemoteDataSource(
-      fireBaseAuth,
-      firebaseFirestore,
-    );
-
-    final authLocalDataSource = AuthLocalDataSource(sharedPreferencesHelper);
-
-    final userRepository = UserRepositoryImpl(
-      authRemoteDataSource,
-      authLocalDataSource,
-      firebaseFirestore,
-      firebaseStorage,
-    );
-
-    //Chat Repository
-    final chatLocalDataSource = ChatLocalDataSource(sharedPreferencesHelper);
-    final chatRemoteDataSource = ChatRemoteDataSource(firebaseFirestore);
-
-    final chatRepository = ChatRepositoryImpl(
-      remoteDataSource: chatRemoteDataSource,
-      localDataSource: chatLocalDataSource,
-    );
-
-    //UseCases
-    final sendMessageUseCase = SendMessageUseCase(
-      chatRepository,
-    );
-
-    final loadChatMessageUseCase = LoadChatMessageUseCase(
-      chatRepository,
-    );
-
-    final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
-
-    return BlocProvider(
-      create: (context) => ChatBloc(
-        sendMessageUseCase: sendMessageUseCase,
-        loadChatMessageUseCase: loadChatMessageUseCase,
-        getUserByIdUseCase: getUserByIdUseCase,
-      )..add(
-          LoadChatMessageEvent(
-            chatId,
-            receiverId,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthLocalDataSource>(
+          create: (context) =>
+              AuthLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<AuthRemoteDataSource>(
+          create: (context) => AuthRemoteDataSource(
+            GetIt.instance<FirebaseAuth>(),
+            GetIt.instance<FirebaseFirestore>(),
           ),
         ),
-      child: ChatView(
-        chatId: chatId,
-        phoneNumber: phoneNumber ,
-        receiverId: receiverId,
+        RepositoryProvider<UserRepositoryImpl>(
+          create: (context) => UserRepositoryImpl(
+            RepositoryProvider.of<AuthRemoteDataSource>(context),
+            RepositoryProvider.of<AuthLocalDataSource>(context),
+            GetIt.instance<FirebaseFirestore>(),
+            GetIt.instance<FirebaseStorage>(),
+          ),
+        ),
+        RepositoryProvider<ChatLocalDataSource>(
+          create: (context) =>
+              ChatLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<ChatRemoteDataSource>(
+          create: (context) =>
+              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+        ),
+        RepositoryProvider<ChatRepositoryImpl>(
+          create: (context) => ChatRepositoryImpl(
+            remoteDataSource:
+                RepositoryProvider.of<ChatRemoteDataSource>(context),
+            localDataSource:
+                RepositoryProvider.of<ChatLocalDataSource>(context),
+          ),
+        ),
+        RepositoryProvider<SendMessageUseCase>(
+          create: (context) => SendMessageUseCase(
+            RepositoryProvider.of<ChatRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<LoadChatMessageUseCase>(
+          create: (context) => LoadChatMessageUseCase(
+            RepositoryProvider.of<ChatRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<GetUserByIdUseCase>(
+          create: (context) => GetUserByIdUseCase(
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => ChatBloc(
+          sendMessageUseCase:
+              RepositoryProvider.of<SendMessageUseCase>(context),
+          loadChatMessageUseCase:
+              RepositoryProvider.of<LoadChatMessageUseCase>(context),
+          getUserByIdUseCase:
+              RepositoryProvider.of<GetUserByIdUseCase>(context),
+        )..add(
+            LoadChatMessageEvent(
+              chatId,
+              receiverId,
+            ),
+          ),
+        child: ChatView(
+          chatId: chatId,
+          phoneNumber: phoneNumber,
+          receiverId: receiverId,
+        ),
       ),
     );
   }

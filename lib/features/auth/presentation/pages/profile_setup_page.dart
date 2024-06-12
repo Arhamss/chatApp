@@ -17,33 +17,39 @@ class ProfileSetupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sharedPreferencesHelper = GetIt.instance<SharedPreferencesHelper>();
-    final fireBaseAuth = GetIt.instance<FirebaseAuth>();
-    final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
-    final firebaseStorage = GetIt.instance<FirebaseStorage>();
-
-    //Auth Repository
-    final authRemoteDataSource = AuthRemoteDataSource(
-      fireBaseAuth,
-      firebaseFirestore,
-    );
-    final authLocalDataSource = AuthLocalDataSource(sharedPreferencesHelper);
-
-    final userRepository = UserRepositoryImpl(
-      authRemoteDataSource,
-      authLocalDataSource,
-      firebaseFirestore,
-      firebaseStorage,
-    );
-
-    //UseCases
-    final saveProfileUseCase = SaveProfileUseCase(userRepository);
-
-    return BlocProvider(
-      create: (context) => ProfileBloc(
-        saveProfileUseCase: saveProfileUseCase,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthRemoteDataSource>(
+          create: (context) => AuthRemoteDataSource(
+            GetIt.instance<FirebaseAuth>(),
+            GetIt.instance<FirebaseFirestore>(),
+          ),
+        ),
+        RepositoryProvider<AuthLocalDataSource>(
+          create: (context) =>
+              AuthLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<UserRepositoryImpl>(
+          create: (context) => UserRepositoryImpl(
+            RepositoryProvider.of<AuthRemoteDataSource>(context),
+            RepositoryProvider.of<AuthLocalDataSource>(context),
+            GetIt.instance<FirebaseFirestore>(),
+            GetIt.instance<FirebaseStorage>(),
+          ),
+        ),
+        RepositoryProvider<SaveProfileUseCase>(
+          create: (context) => SaveProfileUseCase(
+            RepositoryProvider.of<UserRepositoryImpl>(context),
+          ),
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => ProfileBloc(
+          saveProfileUseCase:
+              RepositoryProvider.of<SaveProfileUseCase>(context),
+        ),
+        child: ProfileSetupView(),
       ),
-      child: ProfileSetupView(),
     );
   }
 }

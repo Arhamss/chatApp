@@ -1,5 +1,4 @@
 import 'package:chat_app/core/router/app_routes.dart';
-import 'package:chat_app/core/theme.dart';
 import 'package:chat_app/core/widgets/main_button_widget.dart';
 import 'package:chat_app/core/widgets/numpad_widget.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
