@@ -16,9 +16,10 @@ class LoadChatsEvent extends ChatHomeEvent {
 class NavigationToChatScreenEvent extends ChatHomeEvent {
   const NavigationToChatScreenEvent(
     this.chatId,
+    this.phoneNumber,
     this.receiverId,
   );
-
+  final String phoneNumber;
   final String chatId;
   final String receiverId;
 

@@ -50,4 +50,13 @@ class ChatLocalDataSource {
       return null;
     }
   }
+
+  String? getUserDetails(String userId) {
+    try {
+      return sharedPreferencesHelper.getString('user_details_$userId');
+    } catch (e, stackTrace) {
+      logger.severe('Failed to get cached user details', e, stackTrace);
+      return null;
+    }
+  }
 }

@@ -1,117 +1,91 @@
-import 'package:chat_app/core/asset_names.dart';
-import 'package:chat_app/core/router/app_routes.dart';
-import 'package:chat_app/core/widgets/search_bar.dart';
+import 'package:chat_app/core/shared_preferences_helper.dart';
+import 'package:chat_app/features/chat/data/data_sources/chat_local_data_source.dart';
+import 'package:chat_app/features/chat/data/data_sources/chat_remote_data_source.dart';
+import 'package:chat_app/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:chat_app/features/contact/data/data_sources/contact_local_data_source.dart';
+import 'package:chat_app/features/contact/data/data_sources/contact_remote_data_source.dart';
+import 'package:chat_app/features/contact/data/repositories/contact_repository_impl.dart';
+import 'package:chat_app/features/contact/domain/use_cases/add_contact_use_case.dart';
+import 'package:chat_app/features/contact/domain/use_cases/load_contacts_use_case.dart';
+import 'package:chat_app/features/contact/domain/use_cases/load_or_create_chat_conversation_use_case.dart';
 import 'package:chat_app/features/contact/presentation/bloc/contact_bloc.dart';
+import 'package:chat_app/features/contact/presentation/views/contacts_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get_it/get_it.dart';
 
 class ContactsPage extends StatelessWidget {
-  ContactsPage({super.key});
-
-  final TextEditingController searchController = TextEditingController();
+  const ContactsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Contacts',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<ContactLocalDataSource>(
+          create: (context) =>
+              ContactLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<ContactRemoteDataSource>(
+          create: (context) =>
+              ContactRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+        ),
+        RepositoryProvider<ContactRepositoryImpl>(
+          create: (context) => ContactRepositoryImpl(
+            remoteDataSource:
+                RepositoryProvider.of<ContactRemoteDataSource>(context),
+            localDataSource:
+                RepositoryProvider.of<ContactLocalDataSource>(context),
           ),
         ),
-        actions: [
-          const SizedBox.shrink(),
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              addContact,
+        RepositoryProvider<ChatLocalDataSource>(
+          create: (context) =>
+              ChatLocalDataSource(GetIt.instance<SharedPreferencesHelper>()),
+        ),
+        RepositoryProvider<ChatRemoteDataSource>(
+          create: (context) =>
+              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+        ),
+        RepositoryProvider<ChatRepositoryImpl>(
+          create: (context) => ChatRepositoryImpl(
+            remoteDataSource:
+                RepositoryProvider.of<ChatRemoteDataSource>(context),
+            localDataSource:
+                RepositoryProvider.of<ChatLocalDataSource>(context),
+          ),
+        ),
+        RepositoryProvider<AddContactUseCase>(
+          create: (context) => AddContactUseCase(
+            RepositoryProvider.of<ContactRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<LoadContactsUseCase>(
+          create: (context) => LoadContactsUseCase(
+            RepositoryProvider.of<ContactRepositoryImpl>(context),
+          ),
+        ),
+        RepositoryProvider<LoadOrCreateChatConversationUseCase>(
+          create: (context) => LoadOrCreateChatConversationUseCase(
+            RepositoryProvider.of<ChatRepositoryImpl>(context),
+          ),
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => ContactBloc(
+          addContactUseCase: RepositoryProvider.of<AddContactUseCase>(context),
+          loadContactsUseCase:
+              RepositoryProvider.of<LoadContactsUseCase>(context),
+          loadOrCreateChatConversationUseCase:
+              RepositoryProvider.of<LoadOrCreateChatConversationUseCase>(
+            context,
+          ),
+        )..add(
+            LoadContactEvent(
+              GetIt.instance<FirebaseAuth>().currentUser!.uid,
             ),
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          16,
-          16,
-          16,
-          16,
-        ),
-        child: Column(
-          children: [
-            CustomSearchBar(
-              controller: searchController,
-              hintText: 'Placeholder',
-            ),
-            Expanded(
-              child: BlocConsumer<ContactBloc, ContactState>(
-                builder: (context, state) {
-                  if (state is ContactLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is ContactLoaded) {
-                    return ListView.builder(
-                      itemCount: state.contacts.length,
-                      itemBuilder: (context, index) {
-                        final contact = state.contacts[index];
-                        return Column(
-                          children: [
-                            ListTile(
-                              leading: Container(
-                                width: 48,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      contact.photoUrl ?? '',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              title: Text(contact.name),
-                              subtitle: Text(contact.phone),
-                              onTap: () {
-                                context.read<ContactBloc>().add(
-                                      NavigateToChatScreenEvent(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                        contactId: contact.id,
-                                        contacts: state.contacts,
-                                      ),
-                                    );
-                              },
-                            ),
-                            const Divider(
-                              color: Color(0xFFEDEDED),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (state is ContactError) {
-                    return Center(child: Text(state.message));
-                  } else {
-                    return Container();
-                  }
-                },
-                listener: (BuildContext context, ContactState state) {
-                  if (state is NavigatingToChatScreen) {
-                    context.goNamed(
-                      AppRoute.chat.name,
-                      pathParameters: {
-                        'chatId': state.conversationId,
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
+        child: ContactsView(),
       ),
     );
   }

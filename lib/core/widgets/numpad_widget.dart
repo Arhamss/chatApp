@@ -32,9 +32,12 @@ class CustomNumpad extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         itemCount: 12,
+        physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 24,
         ),
         itemBuilder: (context, index) {
           if (index < 9) {
@@ -52,22 +55,20 @@ class CustomNumpad extends StatelessWidget {
   }
 
   Widget _buildNumpadButton(BuildContext context, String value) {
-    return GestureDetector(
-      onTap: () => _onKeyboardTap(context, value),
-      child: Container(
-        margin: const EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF7F7FC),
+    return ElevatedButton(
+      onPressed: () => _onKeyboardTap(context, value),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFFF7F7FC),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(
-          child: Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              color: Colors.black,
-            ),
-          ),
+        padding: const EdgeInsets.all(8.0),
+        elevation: 0,
+      ),
+      child: Text(
+        value,
+        style: const TextStyle(
+          fontSize: 24,
         ),
       ),
     );
@@ -86,7 +87,6 @@ class CustomNumpad extends StatelessWidget {
           child: Icon(
             Icons.backspace,
             size: 24,
-            color: Colors.black,
           ),
         ),
       ),

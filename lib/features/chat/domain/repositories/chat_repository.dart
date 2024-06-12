@@ -9,6 +9,7 @@ abstract class ChatRepository {
   Future<Either<Failure, void>> sendMessage(
     String senderId,
     String text,
+    String topicForNotification,
     String conversationId,
   );
 
