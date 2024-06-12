@@ -2,7 +2,6 @@ import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/features/chat/data/data_sources/chat_local_data_source.dart';
 import 'package:chat_app/features/chat/data/data_sources/chat_remote_data_source.dart';
 import 'package:chat_app/features/chat/data/repositories/chat_repository_impl.dart';
-import 'package:chat_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,9 +14,9 @@ final GetIt getIt = GetIt.instance;
 
 
 Future<void> setup() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   await SharedPreferencesHelper.init();
 
   final sharedPreferencesHelper = SharedPreferencesHelper.instance;
