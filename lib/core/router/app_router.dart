@@ -16,7 +16,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   AppRouter()
       : router = GoRouter(
-          initialLocation: routeMap[AppRoute.chatHome],
+          initialLocation: routeMap[AppRoute.landing],
           debugLogDiagnostics: true,
           navigatorKey: _rootNavigatorKey,
           routes: [
