@@ -13,7 +13,6 @@ import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/more/presentation/bloc/theme_bloc/theme_bloc.dart';
-import 'package:chat_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,9 +23,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
-void runWithAppConfig(AppConfig appConfig, SharedPreferencesHelper sharedPreferencesHelper) {
+void runWithAppConfig(AppConfig appConfig) {
   
-  runApp(MyApp());
+  runApp(MyApp(appConfig: appConfig,));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,4 +1,5 @@
 import 'package:chat_app/AppConfig.dart';
+import 'package:chat_app/core/di/di.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
 import 'package:chat_app/firebase_options_dev.dart';
 import 'package:chat_app/main.dart';
@@ -12,13 +13,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp(options: DefaultFirebaseOptionsDev.currentPlatform);
-  await SharedPreferencesHelper.init();
-  final sharedPreferencesHelper = SharedPreferencesHelper.instance;
+  await setup();
   
-  final prodAppConfig = AppConfig(
+  
+  final DevAppConfig = AppConfig(
     appName: "Dev Flavor",
     themeData: ThemeData(primarySwatch: Colors.blue),
   );
-  runWithAppConfig(prodAppConfig, sharedPreferencesHelper);
+  runWithAppConfig(DevAppConfig);
 }
 
