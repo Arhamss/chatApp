@@ -9,6 +9,10 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
+<<<<<<< HEAD
+=======
+	<string>com.example.chatApp</string>
+>>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
 	<string>com.example.chatApp.prod</string>
 	<key>PROJECT_ID</key>
 	<string>chatapp-2a7b8</string>
@@ -25,6 +29,10 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
+<<<<<<< HEAD
 	<string>1:88431492069:ios:67e80cadd212da0d4dcd0c</string>
+=======
+	<string>1:88431492069:ios:6a2dd292074a12ef4dcd0c</string>
+>>>>>>> 65ccb3ef78c09ed302e8c99c57e0cb1bf31d7171
 </dict>
 </plist>
