@@ -12,6 +12,7 @@ import 'package:chat_app/features/contact/presentation/bloc/contact_bloc.dart';
 import 'package:chat_app/features/contact/presentation/views/contacts_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -45,7 +46,7 @@ class ContactsPage extends StatelessWidget {
         ),
         RepositoryProvider<ChatRemoteDataSource>(
           create: (context) =>
-              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>(), GetIt.instance<FirebaseStorage>()),
         ),
         RepositoryProvider<ChatRepositoryImpl>(
           create: (context) => ChatRepositoryImpl(

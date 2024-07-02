@@ -47,3 +47,13 @@ class LoadChatMessageEvent extends ChatEvent {
         receiverId,
       ];
 }
+
+class SendFileEvent extends ChatEvent{
+  const SendFileEvent(this.file, this.isVideo);
+
+  final XFile file;
+  final bool isVideo;
+
+  @override
+  List<Object> get props => [file, isVideo];
+}
