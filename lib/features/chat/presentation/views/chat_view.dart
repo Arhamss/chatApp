@@ -5,6 +5,7 @@ import 'package:chat_app/features/chat/presentation/widgets/chat_message_bubble.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class ChatView extends StatefulWidget {
@@ -81,6 +82,11 @@ class _ChatViewState extends State<ChatView> {
             builder: (context, state) {
               return ChatInputField(
                 controller: _controller,
+                onSendFile: (XFile file, bool isVideo){
+                  context.read<ChatBloc>().add(
+                    SendFileEvent(file, isVideo),
+                  );
+                },
                 onSend: () {
                   if (_controller.text.isNotEmpty && state is MessageLoaded) {
                     context.read<ChatBloc>().add(
