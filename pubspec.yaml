@@ -59,6 +59,7 @@ dependencies:
   firebase_messaging: ^14.9.4
   http: ^1.0.0
   googleapis_auth: ^1.2.0
+  emoji_picker_flutter: ^2.2.0
 
 
 dev_dependencies:
