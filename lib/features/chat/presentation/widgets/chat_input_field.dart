@@ -1,9 +1,14 @@
 import 'package:chat_app/core/asset_names.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatInputField extends StatelessWidget {
-  const ChatInputField({super.key, required this.controller, required this.onSend});
+  const ChatInputField({
+    super.key,
+    required this.controller,
+    required this.onSend,
+  });
 
   final TextEditingController controller;
   final VoidCallback onSend;
@@ -23,8 +28,8 @@ class ChatInputField extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: controller,
-                decoration: const InputDecoration(
-                  hintText: 'Type a message...',
+                decoration: InputDecoration(
+                  hintText: 'type_a_message'.tr(),
                   border: InputBorder.none,
                 ),
               ),

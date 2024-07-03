@@ -2,48 +2,43 @@ import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:chat_app/core/widgets/search_bar.dart';
-import 'package:chat_app/features/auth/data/models/user_model.dart';
 import 'package:chat_app/features/auth/domain/entities/user_entity.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/build_user_stories.dart';
-import 'package:dartz/dartz.dart';
-import 'package:dartz/dartz_unsafe.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 class ChatHomeView extends StatelessWidget {
   ChatHomeView({super.key});
 
   final TextEditingController searchController = TextEditingController();
 
-  String findNumber(String PartiipantId, List<UserEntity> userEntityUserEntities){
-
-      for (var i = 0; i < userEntityUserEntities.length; i++) {
-        if(PartiipantId == userEntityUserEntities[i].id){
-          return userEntityUserEntities[i].phoneNumber;
-        }
+  String findNumber(
+    String participantId,
+    List<UserEntity> userEntityUserEntities,
+  ) {
+    for (var i = 0; i < userEntityUserEntities.length; i++) {
+      if (participantId == userEntityUserEntities[i].id) {
+        return userEntityUserEntities[i].phoneNumber;
       }
-      return '';
-
     }
-//REVIEW - - -  -  have to correct the name logic here for the push notification title
+    return '';
+  }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Chats',
+          'chats',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w500,
           ),
-        ),
+        ).tr(),
         actions: [
           IconButton(
             onPressed: () {},
@@ -74,7 +69,7 @@ class ChatHomeView extends StatelessWidget {
             ),
             CustomSearchBar(
               controller: searchController,
-              hintText: 'Search for chats',
+              hintText: 'search_for_chats'.tr(),
             ),
             Expanded(
               child: BlocConsumer<ChatHomeBloc, ChatHomeState>(
@@ -128,8 +123,8 @@ class ChatHomeView extends StatelessWidget {
                             ],
                           ),
                           onTap: () {
-                            final phoneNumber = findNumber(chat.participants[1], state.users);
-
+                            final phoneNumber =
+                                findNumber(chat.participants[1], state.users);
 
                             context.read<ChatHomeBloc>().add(
                                   NavigationToChatScreenEvent(
