@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "88431492069",
-    "project_id": "chatapp-2a7b8",
-    "storage_bucket": "chatapp-2a7b8.appspot.com"
+    "project_number": "303049852639",
+    "project_id": "chat-application-d282e",
+    "storage_bucket": "chat-application-d282e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:88431492069:android:33d43554fdb596704dcd0c",
+        "mobilesdk_app_id": "1:303049852639:android:2c634a91523c77d556cb6a",
         "android_client_info": {
-          "package_name": "com.example.chat_app"
+          "package_name": "com.chat_application.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAZrj0wgs36f7NNtSEHKx_1fnErsLdWvww"
+          "current_key": "AIzaSyCv7EgJ2MMh1t1sWJuirK5UV0z2VV7LvsA"
         }
       ],
       "services": {
@@ -26,7 +26,45 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:88431492069:android:07da05b531ba21774dcd0c",
+        "mobilesdk_app_id": "1:303049852639:android:c42700a2813d198c56cb6a",
+        "android_client_info": {
+          "package_name": "com.chat_application.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv7EgJ2MMh1t1sWJuirK5UV0z2VV7LvsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303049852639:android:06ea32300645410056cb6a",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv7EgJ2MMh1t1sWJuirK5UV0z2VV7LvsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303049852639:android:868b98de10089fe856cb6a",
         "android_client_info": {
           "package_name": "com.example.chat_app.prod"
         }
@@ -34,7 +72,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAZrj0wgs36f7NNtSEHKx_1fnErsLdWvww"
+          "current_key": "AIzaSyCv7EgJ2MMh1t1sWJuirK5UV0z2VV7LvsA"
         }
       ],
       "services": {
