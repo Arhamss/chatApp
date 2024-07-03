@@ -3,6 +3,7 @@ import 'package:chat_app/core/widgets/main_button_widget.dart';
 import 'package:chat_app/core/widgets/numpad_widget.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -41,20 +42,20 @@ class PhoneNumberView extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.23,
                   ),
                   const Text(
-                    'Enter Your Phone Number',
+                    'enter_your_phone_number',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
-                  ),
+                  ).tr(),
                   const Text(
-                    'Please confirm your country code and enter your phone number',
+                    'please_confirm_your_country_code',
                     style: TextStyle(
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,
-                  ),
+                  ).tr(),
                 ],
               ),
             ),
@@ -108,7 +109,7 @@ class PhoneNumberView extends StatelessWidget {
             BlocConsumer<AuthBloc, AuthState>(
               builder: (context, state) {
                 return MainButton(
-                  buttonText: 'Continue',
+                  buttonText: 'continue'.tr(),
                   onTapAction: () {
                     final fullPhoneNumber =
                         '${_countryCodeController.text}${context.read<AuthBloc>().state is PhoneNumberEntryState ? (context.read<AuthBloc>().state as PhoneNumberEntryState).enteredPhoneNumber : ''}';
@@ -126,7 +127,10 @@ class PhoneNumberView extends StatelessWidget {
                     extra: state.verificationId,
                   );
                 } else if (state is AuthError) {
-                  _showToast(context, 'Error: ${state.message}');
+                  _showToast(
+                    context,
+                    'error'.tr() + state.message,
+                  );
                 }
               },
             ),
