@@ -4,6 +4,7 @@ import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/main_button_widget.dart';
 import 'package:chat_app/features/auth/data/models/user_model.dart';
 import 'package:chat_app/features/auth/presentation/bloc/profile_bloc/profile_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,7 @@ class ProfileSetupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Profile'),
+        title: const Text('your_profile').tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,7 +87,7 @@ class ProfileSetupView extends StatelessWidget {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0xFFF7F7FC),
-                labelText: 'First Name (Required)',
+                labelText: 'first_name_required'.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -103,7 +104,7 @@ class ProfileSetupView extends StatelessWidget {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0xFFF7F7FC),
-                labelText: 'Last Name (Optional)',
+                labelText: 'last_name_optional'.tr(),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -118,7 +119,7 @@ class ProfileSetupView extends StatelessWidget {
             BlocConsumer<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 return MainButton(
-                  buttonText: 'Save',
+                  buttonText: 'save'.tr(),
                   onTapAction: () {
                     final user = FirebaseAuth.instance.currentUser;
                     if (user != null) {
@@ -142,7 +143,7 @@ class ProfileSetupView extends StatelessWidget {
                 if (state is ProfileSaveSuccess) {
                   context.goNamed(AppRoute.chatHome.name);
                 } else if (state is ProfileSaveFailure) {
-                  _showToast(context, 'Error: ${state.message}');
+                  _showToast(context, 'error'.tr() + state.message);
                 }
               },
             ),

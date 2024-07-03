@@ -11,15 +11,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  await Firebase.initializeApp(options: DefaultFirebaseOptionsDev.currentPlatform);
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptionsDev.currentPlatform,
+  );
   await setup();
-  
-  
-  final DevAppConfig = AppConfig(
-    appName: "Dev Flavor",
+
+  final devAppConfig = AppConfig(
+    appName: 'Dev Flavor',
     themeData: ThemeData(primarySwatch: Colors.blue),
   );
-  runWithAppConfig(DevAppConfig);
+  runWithAppConfig(devAppConfig);
 }
-
