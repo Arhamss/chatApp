@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
-class DefaultFirebaseOptionsProd {
+class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       throw UnsupportedError(
@@ -59,10 +59,11 @@ class DefaultFirebaseOptionsProd {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBs4pEbRLgThYLSLxgYS6DtfoMmeYqilA8',
-    appId: '1:88431492069:ios:67e80cadd212da0d4dcd0c',
+    appId: '1:88431492069:ios:7619a2f6520244414dcd0c',
     messagingSenderId: '88431492069',
     projectId: 'chatapp-2a7b8',
     storageBucket: 'chatapp-2a7b8.appspot.com',
-    iosBundleId: 'com.example.chatApp.prod',
+    iosBundleId: 'com.example.chatApp.dev',
   );
+
 }
