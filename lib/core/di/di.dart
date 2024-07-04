@@ -24,6 +24,7 @@ Future<void> setup() async {
   final firebaseAuth = FirebaseAuth.instance;
   final firebaseStorage = FirebaseStorage.instance;
 
+
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   await messaging.requestPermission(
@@ -67,7 +68,7 @@ await messaging.getInitialMessage();
   getIt.registerLazySingleton(
     () => ChatLocalDataSource(sharedPreferencesHelper),
   );
-  getIt.registerLazySingleton(() => ChatRemoteDataSource(firebaseFirestore));
+  getIt.registerLazySingleton(() => ChatRemoteDataSource(firebaseFirestore,firebaseStorage));
   getIt.registerLazySingleton(
     () => ChatRepositoryImpl(
       remoteDataSource: getIt<ChatRemoteDataSource>(),

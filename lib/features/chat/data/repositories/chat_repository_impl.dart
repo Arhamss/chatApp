@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:chat_app/core/failures.dart';
 import 'package:chat_app/features/chat/data/data_sources/chat_local_data_source.dart';
 import 'package:chat_app/features/chat/data/data_sources/chat_remote_data_source.dart';
@@ -7,8 +8,10 @@ import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/domain/entities/conversation_entity.dart';
 import 'package:chat_app/features/chat/domain/entities/message_entity.dart';
 import 'package:chat_app/features/chat/domain/repositories/chat_repository.dart';
+
 import 'package:dartz/dartz.dart';
 import 'package:logging/logging.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl({
@@ -142,6 +145,22 @@ class ChatRepositoryImpl implements ChatRepository {
         e,
       );
       yield Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendFile(XFile file, bool isVideo) async {
+    try{
+      print("reposiotry par pocha hai ");
+      await remoteDataSource.uploadVideoToFirebase(file, isVideo);
+      return const Right(null);
+    }
+    catch(e){
+      logger.severe(
+        'Unexpected error while saving the file on firebase',
+        e,
+      );
+      return Left(ServerFailure());
     }
   }
 }
