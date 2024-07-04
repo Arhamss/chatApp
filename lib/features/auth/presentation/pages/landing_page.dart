@@ -2,6 +2,7 @@ import 'package:chat_app/core/asset_names.dart';
 import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:chat_app/core/widgets/main_button_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,16 +27,16 @@ class LandingPage extends StatelessWidget {
                   assetPath: landingPage,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(72, 32, 72, 16),
-                child: Text(
-                  'Connect easily with your family and friends over countries',
+              Padding(
+                padding: const EdgeInsets.fromLTRB(72, 32, 72, 16),
+                child: const Text(
+                  'connect_easily',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
-                ),
+                ).tr(), // Apply tr()
               ),
             ],
           ),
@@ -54,16 +55,16 @@ class LandingPage extends StatelessWidget {
                     }
                   },
                   child: const Text(
-                    'Terms & Privacy Policy',
+                    'terms_privacy_policy',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
                     ),
-                  ),
+                  ).tr(), // Apply tr()
                 ),
               ),
               MainButton(
-                buttonText: 'Sign In',
+                buttonText: 'sign_in'.tr(),
                 onTapAction: () {
                   context.goNamed(AppRoute.signin.name);
                 },
@@ -72,7 +73,7 @@ class LandingPage extends StatelessWidget {
                 height: 10,
               ),
               MainButton(
-                buttonText: 'Start Messaging',
+                buttonText: 'start_messaging'.tr(),
                 onTapAction: () {
                   context.goNamed(AppRoute.phone.name);
                 },

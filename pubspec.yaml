@@ -59,6 +59,7 @@ dependencies:
   firebase_messaging: ^14.9.4
   http: ^1.0.0
   googleapis_auth: ^1.2.0
+  easy_localization: ^3.0.7  
   emoji_picker_flutter: ^2.2.0
 
 
@@ -92,6 +93,7 @@ flutter:
     - assets/
     - assets/auth_assets/
     - assets/jsons/
+    - assets/translations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

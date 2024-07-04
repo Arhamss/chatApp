@@ -3,6 +3,7 @@ import 'package:chat_app/core/router/app_routes.dart';
 import 'package:chat_app/core/widgets/asset_image_widget.dart';
 import 'package:chat_app/core/widgets/search_bar.dart';
 import 'package:chat_app/features/contact/presentation/bloc/contact_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,12 +19,12 @@ class ContactsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Contacts',
+          'contacts',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w500,
           ),
-        ),
+        ).tr(),
         actions: [
           const SizedBox.shrink(),
           IconButton(
@@ -45,7 +46,7 @@ class ContactsView extends StatelessWidget {
           children: [
             CustomSearchBar(
               controller: searchController,
-              hintText: 'Search for a contact',
+              hintText: 'search_for_a_contact'.tr(),
             ),
             Expanded(
               child: BlocConsumer<ContactBloc, ContactState>(

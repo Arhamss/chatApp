@@ -1,4 +1,5 @@
 import 'package:chat_app/core/asset_names.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
