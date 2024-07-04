@@ -1,4 +1,3 @@
-import 'package:chat_app/core/di/di.dart';
 import 'package:chat_app/AppConfig.dart';
 import 'package:chat_app/core/router/app_router.dart';
 import 'package:chat_app/core/shared_preferences_helper.dart';
@@ -12,10 +11,11 @@ import 'package:chat_app/features/chat/domain/use_cases/get_chats_use_case.dart'
 import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bottom_nav_bar_bloc/bottom_nav_bar_bloc.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_home_bloc/chat_home_bloc.dart';
+import 'package:chat_app/features/locale/bloc/locale_bloc.dart';
 import 'package:chat_app/features/more/presentation/bloc/theme_bloc/theme_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +23,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
-void runWithAppConfig(AppConfig appConfig) {
-  
-  runApp(MyApp(appConfig: appConfig,));
+Future<void> runWithAppConfig(AppConfig appConfig) async {
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ur')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: MyApp(
+        appConfig: appConfig,
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({required this.appConfig ,super.key});
+  MyApp({required this.appConfig, super.key});
 
   final AppRouter _appRouter = AppRouter();
   final AppThemes appThemes = AppThemes();
@@ -42,8 +51,6 @@ class MyApp extends StatelessWidget {
     final firebaseFirestore = GetIt.instance<FirebaseFirestore>();
     final firebaseStorage = GetIt.instance<FirebaseStorage>();
 
-
-    
     // Auth Repository
     final authRemoteDataSource = AuthRemoteDataSource(
       firebaseAuth,
@@ -62,30 +69,28 @@ class MyApp extends StatelessWidget {
         GetChatsUseCase(GetIt.instance<ChatRepositoryImpl>());
     final getUserByIdUseCase = GetUserByIdUseCase(userRepository);
 
-
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
 
-      
-
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification!.body}');
+        print(
+          'Message also contained a notification: ${message.notification!.body}',
+        );
 
-        final messageRes = "${message.notification!.title}\n${message.notification!.body}";
-        
+        final messageRes =
+            '${message.notification!.title}\n${message.notification!.body}';
+
         Fluttertoast.showToast(
-        msg: messageRes,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Color.fromARGB(255, 2, 249, 15),
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+          msg: messageRes,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: const Color.fromARGB(255, 2, 249, 15),
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     });
-
 
     return MultiRepositoryProvider(
       providers: [
@@ -111,8 +116,15 @@ class MyApp extends StatelessWidget {
           BlocProvider<ThemeBloc>(
             create: (context) => ThemeBloc(),
           ),
+          BlocProvider<LocaleBloc>(
+            create: (context) => LocaleBloc()..add(LoadDeviceLocaleEvent()),
+          ),
         ],
-        child: AppView(appThemes: appThemes, appRouter: _appRouter, appConfig: appConfig,),
+        child: AppView(
+          appThemes: appThemes,
+          appRouter: _appRouter,
+          appConfig: appConfig,
+        ),
       ),
     );
   }
@@ -137,16 +149,24 @@ class AppView extends StatelessWidget {
         return previous.themeMode != current.themeMode;
       },
       builder: (context, themeState) {
-        return MaterialApp.router(
-          themeMode: themeState.themeMode,
-          darkTheme: appThemes.darkTheme,
-          theme: appThemes.lightTheme,
-          debugShowCheckedModeBanner: false,
-          routerConfig: _appRouter.router,
-          title: appConfig.appName,
+        return BlocBuilder<LocaleBloc, LocaleState>(
+          builder: (context, localeState) {
+            return MaterialApp.router(
+              themeMode: themeState.themeMode,
+              darkTheme: appThemes.darkTheme,
+              theme: appThemes.lightTheme,
+              debugShowCheckedModeBanner: false,
+              routerConfig: _appRouter.router,
+              title: appConfig.appName,
+              locale: localeState is LocaleLoaded
+                  ? localeState.locale
+                  : context.locale,
+              supportedLocales: context.supportedLocales,
+              localizationsDelegates: context.localizationDelegates,
+            );
+          },
         );
       },
-
     );
   }
 }
