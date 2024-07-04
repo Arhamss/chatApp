@@ -7,6 +7,7 @@ import 'package:chat_app/features/chat/data/data_sources/chat_remote_data_source
 import 'package:chat_app/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:chat_app/features/chat/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:chat_app/features/chat/domain/use_cases/load_chat_message_use_case.dart';
+import 'package:chat_app/features/chat/domain/use_cases/send_file_on_storage_usecase.dart';
 import 'package:chat_app/features/chat/domain/use_cases/send_message_use_case.dart';
 import 'package:chat_app/features/chat/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:chat_app/features/chat/presentation/views/chat_view.dart';
@@ -57,7 +58,7 @@ class ChatPage extends StatelessWidget {
         ),
         RepositoryProvider<ChatRemoteDataSource>(
           create: (context) =>
-              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>()),
+              ChatRemoteDataSource(GetIt.instance<FirebaseFirestore>(), GetIt.instance<FirebaseStorage>()),
         ),
         RepositoryProvider<ChatRepositoryImpl>(
           create: (context) => ChatRepositoryImpl(
@@ -82,6 +83,11 @@ class ChatPage extends StatelessWidget {
             RepositoryProvider.of<UserRepositoryImpl>(context),
           ),
         ),
+        RepositoryProvider<SendFileOnStorageUsecase>(
+          create: (context)=> SendFileOnStorageUsecase(
+            RepositoryProvider.of<ChatRepositoryImpl>(context),
+        ),
+        ),
       ],
       child: BlocProvider(
         create: (context) => ChatBloc(
@@ -91,6 +97,7 @@ class ChatPage extends StatelessWidget {
               RepositoryProvider.of<LoadChatMessageUseCase>(context),
           getUserByIdUseCase:
               RepositoryProvider.of<GetUserByIdUseCase>(context),
+          sendFileOnStorageUsecase: RepositoryProvider.of<SendFileOnStorageUsecase>(context),
         )..add(
             LoadChatMessageEvent(
               chatId,

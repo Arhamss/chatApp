@@ -1,19 +1,23 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:chat_app/features/chat/data/models/conversation_model.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:get_it/get_it.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
 
 class ChatRemoteDataSource {
-  ChatRemoteDataSource(this.firestore);
+  ChatRemoteDataSource(this.firestore, this.storage);
 
   final FirebaseFirestore firestore;
+  final FirebaseStorage storage;
   final Logger logger = Logger('ChatRemoteDataSource');
 
   Stream<List<ConversationModel>> getChats(String userId) {
@@ -86,6 +90,37 @@ class ChatRemoteDataSource {
       throw Exception('Error sending notification: $e');
     }
   }
+
+
+  Future<void> uploadVideoToFirebase(XFile file, bool isVideo) async {
+  try {
+    print("Remote Data source par bhi pocha hia");
+    // Create a reference to Firebase Storage
+    Reference storageRef;
+    if(isVideo){
+    storageRef = storage.ref().child('videos/${file.name}');
+    }
+    else{
+      storageRef = storage.ref().child('images/${file.name}');
+    }
+
+    // Upload the file
+    UploadTask uploadTask = storageRef.putFile(File(file.path));
+
+    // Wait for the upload to complete
+    TaskSnapshot taskSnapshot = await uploadTask;
+
+    // Get the download URL
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+    // Use the download URL as needed
+    print('Download URL: $downloadUrl');
+  } catch (e) {
+    // Handle errors
+    print('Error uploading video: $e');
+  }
+}
+
 
   Future<String> getCurrentUserId() async {
     try{
